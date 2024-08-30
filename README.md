@@ -3,6 +3,7 @@
 - Tehtävänä on kehittää webbisovellus, jonka avulla 2nd hand -kalusteiden kauppias voi tuottaa tekoälyä
 hyödyntäen kiertotaloushenkisiä mainoksia (esim. yritys- ja tuotemainokset) someen (esim. TikTok, IG,
 Facebook).
+Product backlog löytyy täältä: https://github.com/orgs/Syaani-OhjelmistoProjekti2/projects/2
 ## Järjestelmän määrittely
 ### Sovelluksen tärkeimmät ominaisuudet
 - Webbisivu, jossa voidaan määritellä suuntaviivat mainokselle (tekoälylle promptina kuvaa, tekstiä ja/tai saneluja)
