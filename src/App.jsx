@@ -53,6 +53,25 @@ function App() {
     }
   };
 
+  const handleImageRender = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:3001/api/adds/image", {
+        method: "GET"
+      });
+    
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching the image:", error);
+    }
+  }    
+
   return (
     <>
       <form>
@@ -84,6 +103,10 @@ function App() {
 
         <button className="buttoni" onClick={handleButtonPress}>
           Submit
+        </button>
+
+        <button className="buttoni2" onClick={handleImageRender}>
+          Image
         </button>
       </form>
     </>
