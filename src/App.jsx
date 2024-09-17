@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
   const [previewImgUrl, setPreviewImgUrl] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -67,6 +68,7 @@ function App() {
     
       const data = await response.json();
       console.log(data);
+      setImageUrl(data[0].url);
     } catch (error) {
       console.error("Error fetching the image:", error);
     }
@@ -108,6 +110,14 @@ function App() {
         <button className="buttoni2" onClick={handleImageRender}>
           Image
         </button>
+
+        <div>
+          {imageUrl ? (
+            <img src={imageUrl} alt="Fetched from backend" />
+          ) : (
+            <p>Loading image...</p>
+          )}
+        </div>
       </form>
     </>
   );
