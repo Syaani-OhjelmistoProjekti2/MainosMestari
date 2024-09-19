@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
@@ -30,8 +30,8 @@ function App() {
     }
 
     const formData = new FormData();
-    formData.append("image", selectedImage); // Lisätään kuva
-    formData.append("description", description); // Lisätään description-teksti
+    formData.append("img", selectedImage); // Lisätään kuva
+    formData.append("prompt", description); // Lisätään description-teksti
 
     try {
       const response = await fetch("http://localhost:3001/api/adds/image", { // post pyyntö
@@ -39,14 +39,17 @@ function App() {
         body: formData,
       });
 
-      if (response.ok) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+
+      } else {
         alert("Data lähetetty onnistuneesti!");
         // Tyhjennetään lomake
         setPreviewImgUrl("");
         setDescription("");
         setSelectedImage(null);
-      } else {
-        alert("Lähetys epäonnistui.");
+        const data = await response.json();
+        setImageUrl(data[0].url);
       }
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
