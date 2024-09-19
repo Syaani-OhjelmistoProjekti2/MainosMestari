@@ -16,9 +16,8 @@ Product backlog löytyy täältä: https://github.com/orgs/Syaani-OhjelmistoProj
 
 ## Tietokanta
 ## Tekninen kuvaus
-# Web-sovelluksen tekninen kuvaus
 
-## 1. Frontend
+### 1. Frontend
 - **Käytetty teknologia**: React + Vite
 - **Kuvaus**: Frontend on toteutettu käyttäen React-kirjastoa ja Viteä kehitysympäristönä. React mahdollistaa komponenttipohjaisen arkkitehtuurin ja tehokkaan tilanhallinnan. Vite tarjoaa nopean kehitysympäristön sekä optimoi sovelluksen tuotantoversiot.
   
@@ -30,7 +29,7 @@ Product backlog löytyy täältä: https://github.com/orgs/Syaani-OhjelmistoProj
 - **Build- ja kehitystyökalut**:
   - **Vite**: Vite takaa nopean kehitysympäristön ja optimoi sovelluksen tuotantokäyttöön. 
 
-## 2. Backend
+### 2. Backend
 - **Käytetty teknologia**: Node.js + Express.js
 - **Kuvaus**: Backend on toteutettu Node.js:llä ja Express.js-sovelluskehyksellä. Node.js:n avulla JavaScriptia voidaan käyttää palvelinpuolella, ja Express mahdollistaa kevyiden ja joustavien REST API -rajapintojen rakentamisen.
 
@@ -40,7 +39,7 @@ Product backlog löytyy täältä: https://github.com/orgs/Syaani-OhjelmistoProj
   - **Middleware**: Express.js:n avulla käytetään middleware-komponentteja.
   - **Asynkroninen ohjelmointi**: Node.js:n asynkroniset ominaisuudet mahdollistavat tehokkaan I/O-käsittelyn, kuten tietokantakyselyt ja API-kutsut.
 
-## 3. DALLE-3 integraatio
+### 3. DALLE-3 integraatio
 - **Käytetty tekoälymalli**: DALLE-3
 - **Kuvaus**: Sovelluksessa on integroitu OpenAI:n DALLE-3-malli, joka mahdollistaa kuvan generoinnin luonnollisella kielellä annettujen tekstikuvauksien perusteella. Malli on yhdistetty backend-puolelle, ja se tarjoaa kuvanluontitoiminnon käyttäjän määrittelemien syötteiden perusteella.
 
@@ -49,7 +48,7 @@ Product backlog löytyy täältä: https://github.com/orgs/Syaani-OhjelmistoProj
   - **API-yhteys**: DALLE-3-mallia hyödynnetään kutsumalla OpenAI:n APIa backendin kautta, ja generoidut kuvat välitetään takaisin frontendille esitettäväksi.
 
 
-## 4. Tietoturva ja suorituskyky
+### 4. Tietoturva ja suorituskyky
 - **CORS-suojaus**: CORS-käytännöt on määritetty hallitsemaan palvelimen ja frontendin välistä liikennettä.
 
 
