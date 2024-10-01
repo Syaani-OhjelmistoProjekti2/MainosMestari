@@ -62,3 +62,46 @@ buttoni:hover {
   align-items: center;
   justify-content: center;
 }
+
+/* Navigointipalkki */
+nav {
+  background-color: #333;
+  padding: 10px;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; 
+}
+
+/* Lista vierekkäin flexboxilla */
+nav ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+
+}
+
+/* Yksittäiset navigointikohteet */
+nav ul li {
+  margin-right: 20px;
+}
+
+/* Linkit */
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: #555;
+}
+
+.content {
+  margin-top: 60px; /* Navigointipalkin korkeus + lisätilaa */
+}
