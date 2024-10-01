@@ -75,7 +75,34 @@ function App() {
     } catch (error) {
       console.error("Error fetching the image:", error);
     }
-  }    
+  }
+
+  const handleStabilityAi = async (event) => {
+
+    event.preventDefault();
+      fetch('http://localhost:3001/api/adds/stabilityimg')
+      .then(response => response.json())
+      .then(data => {
+        // Muunnetaan Base64-string takaisin binääridataksi, esim. kuvaksi
+        const binaryString = atob(data.data);
+        const binaryLen = binaryString.length;
+        const bytes = new Uint8Array(binaryLen);
+        for (let i = 0; i < binaryLen; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+ 
+        // Luo Blob-objekti
+        const blob = new Blob([bytes], { type: 'image/jpeg' });
+        // Luo URL näytettäväksi
+        const imageUrl = URL.createObjectURL(blob);
+        setImageUrl(imageUrl);
+      });
+    
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  }
+
 
   return (
     <>
@@ -112,6 +139,10 @@ function App() {
 
         <button className="buttoni2" onClick={handleImageRender}>
           Image
+        </button>
+
+        <button className="buttoni3" onClick={handleStabilityAi}>
+          Stability AI
         </button>
 
         <div>
