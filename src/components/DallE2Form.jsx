@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const DallE2Form = () => {
   const [previewImgUrl, setPreviewImgUrl] = useState("");
@@ -6,6 +6,8 @@ const DallE2Form = () => {
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -49,12 +51,16 @@ const DallE2Form = () => {
         setSelectedImage(null);
         const data = await response.json();
         setImageUrl(data[0].url);
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = null;
+          }
       }
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
       alert("Tapahtui virhe.");
     } finally {
-      setLoading(false); // Lopeta latausindikaattorin näyttäminen
+      setLoading(false);
     }
   };
   const handleImageLoad = () => {
@@ -71,11 +77,11 @@ const DallE2Form = () => {
           cols={50}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Syötä kuvaus DALL-E 2:lle"
+          placeholder="Syötä kuvaus Dall-E 2:lle"
         />
         
         <div>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <input type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} />
         </div>
 
         {previewImgUrl && (
@@ -93,7 +99,7 @@ const DallE2Form = () => {
           </div>
         )}
 
-        <button type="submit" style={{ marginTop: '100px' }}>
+        <button type="submit" className="buttoni">
                 Submit
         </button>
       </form>
@@ -102,7 +108,7 @@ const DallE2Form = () => {
 
       {imageUrl && (
         <div>
-          <img src={imageUrl} alt="Fetched from backend" style={{ maxWidth: '300px' }} onLoad={handleImageLoad}/>
+          <img src={imageUrl} alt="Vastaanotettu kuva" style={{ maxWidth: '300px' }} onLoad={handleImageLoad}/>
         </div>
       )}
     </div>

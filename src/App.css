@@ -49,10 +49,10 @@ textarea {
 .buttoni {
   background-color: blue;
   color: white;
-
+  margin-top: 50px;
 }
 
-buttoni:hover {
+.buttoni:hover {
   background-color: blue;
 }
 

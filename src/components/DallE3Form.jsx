@@ -5,6 +5,7 @@ const DallE3Form = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
+
   const handleImageRender = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -24,7 +25,7 @@ const DallE3Form = () => {
     } catch (error) {
       console.error("Error fetching the image:", error);
     } finally {
-      setLoading(false); // Piilotetaan latausviesti, kun kuvan haku on valmis
+      setLoading(false);
     }
   };
 
@@ -35,7 +36,7 @@ const DallE3Form = () => {
   return (
     <div>
       <h1>Dall-E 3</h1>
-      <button onClick={handleImageRender}>Lataa kuva</button>
+      <button onClick={handleImageRender} className="buttoni">Generoi kuva Dall-E 3 avulla</button>
 
       {loading && <p>Loading image...</p>}
 
