@@ -36,7 +36,7 @@ const StabilityForm = () => {
     formData.append("prompt", description);
 
     try {
-      const response = await fetch("http://localhost:3001/api/adds/stabilityimg", {
+      const response = await fetch("http://localhost:3001/api/ads/stabilityimg", {
         method: "POST",
         body: formData,
       });

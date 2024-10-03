@@ -37,7 +37,7 @@ const DallE2Form = () => {
     formData.append("prompt", description);
 
     try {
-      const response = await fetch("http://localhost:3001/api/adds/image", {
+      const response = await fetch("http://localhost:3001/api/ads/dall2image", {
         method: "POST",
         body: formData,
       });

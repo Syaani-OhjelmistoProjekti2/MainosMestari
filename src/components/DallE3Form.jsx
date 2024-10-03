@@ -11,7 +11,7 @@ const DallE3Form = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/adds/image", {
+      const response = await fetch("http://localhost:3001/api/ads/dall3image", {
         method: "GET",
       });
     
