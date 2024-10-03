@@ -24,7 +24,7 @@ const DallE3Form = () => {
 
   const handleButtonPress = async (event) => {
     event.preventDefault();
-
+    setImageUrl('');
     if (!selectedImage || !description) {
       alert("Täytä molemmat kentät!");
       return;
@@ -46,15 +46,15 @@ const DallE3Form = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       } else {
         alert("Data lähetetty onnistuneesti!");
-        setPreviewImgUrl("");
-        setDescription("");
-        setSelectedImage(null);
+        //setPreviewImgUrl("");
+        //setDescription("");
+        //setSelectedImage(null);
         const data = await response.json();
         setImageUrl(data);
 
-        if (fileInputRef.current) {
-            fileInputRef.current.value = null;
-          }
+        //if (fileInputRef.current) {
+          //  fileInputRef.current.value = null;
+         // }
       }
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);

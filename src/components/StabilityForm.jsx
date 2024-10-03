@@ -23,7 +23,7 @@ const StabilityForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setImageUrl('');
     if (!selectedImage || !description) {
       alert("Täytä molemmat kentät!");
       return;
@@ -49,14 +49,14 @@ const StabilityForm = () => {
       const base64Image = data.data;
 
       const imgUrl = `data:image/png;base64,${base64Image}`;
-      setPreviewImgUrl('');
-      setDescription("");
-      setSelectedImage(null);
+      //setPreviewImgUrl('');
+      //setDescription("");
+      //setSelectedImage(null);
       setImageUrl(imgUrl);
 
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
-      }
+     // if (fileInputRef.current) {
+      //  fileInputRef.current.value = null;
+     // }
   
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
