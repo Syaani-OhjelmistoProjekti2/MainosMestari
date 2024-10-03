@@ -70,6 +70,13 @@ const StabilityForm = () => {
     setLoading(false);
   }
 
+  const downloadImage = () => {
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = "stability.png";
+    link.click();
+  };
+
   return (
     <div>
       <h1>Stability AI Form</h1>
@@ -110,6 +117,7 @@ const StabilityForm = () => {
       {imageUrl && (
         <div>
           <img src={imageUrl} alt="Vastaanotettu kuva" style={{ maxWidth: '300px' }} onLoad={handleImageLoad}/>
+          <button className='buttoni' onClick={downloadImage}>Lataa kuva</button>
         </div>
       )}
     </div>
