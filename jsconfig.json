@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["./src/*"]
+      }
+    },
+    "exclude": ["node_modules", "dist"]  // Voit lisätä nämä, jotta ongelmat eivät johdu käännösvirheistä.
+  }
+  
