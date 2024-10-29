@@ -1,6 +1,11 @@
 import { useState, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label"
+
+
+
 
 export default function ImageUploader() {
   const [images, setImages] = useState([]);
@@ -8,6 +13,7 @@ export default function ImageUploader() {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const fileInputRef = useRef(null);
+  const [isAdText, setisAdText] = useState(false);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -50,6 +56,7 @@ export default function ImageUploader() {
     const formData = new FormData();
     formData.append("img", images[0].file);
     formData.append("prompt", description);
+    formData.append("isAdText", isAdText);
 
     try {
       const response = await fetch("http://localhost:3001/api/ads/stabilityimg", {
@@ -85,15 +92,21 @@ export default function ImageUploader() {
     link.click();
   };
 
+  const onCheckedChange = (isAdText) => {
+    setisAdText(isAdText);
+    console.log(isAdText)
+  }
+
   return (
     <div className="w-full h-full flex justify-center items-center" style={{ width: '100%', height: '100%' }}>
-      <Card className="w-full h-full max-w-4xl max-h-screen" style={{ width: '100%', height: '100%' }}>
+      <Card className="w-full h-full max-w-4xl max-h-screen" style={{ width: '100%', height: '100%', padding: 100 }}>
         <CardHeader>
           <CardTitle>Stability AI Form</CardTitle>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
             <textarea
+              id="description"
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -101,7 +114,10 @@ export default function ImageUploader() {
               style={{
                 resize: 'none',
                 width: '100%',
-                height: '100px'
+                height: '100px',
+                border: '1px solid #ccc',  // Raja ympärille
+                borderRadius: '4px',  // Pyöristetyt kulmat
+                padding: '8px'  // Tyhjää sisältöön
               }}
             />
             <div
@@ -115,13 +131,14 @@ export default function ImageUploader() {
               </div>
               <div className="text-center mt-2">
                 <input
+                  name="fileInput"
+                  id="fileInput"
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={handleFileChange}
                   ref={fileInputRef}
                   style={{ display: "none" }}
-                  id="fileInput"
                 />
                 <label htmlFor="fileInput">
                   <Button
@@ -158,6 +175,17 @@ export default function ImageUploader() {
                 </div>
               ))}
             </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch 
+              id="adprompt" 
+              className="scale-50"
+              checked={isAdText}
+              onCheckedChange={onCheckedChange}
+              />
+              <Label htmlFor="adprompt" className="text-sm">Do you want adprompt?</Label>
+            </div>
+
 
             <Button type="submit" className="buttoni">
               Submit
