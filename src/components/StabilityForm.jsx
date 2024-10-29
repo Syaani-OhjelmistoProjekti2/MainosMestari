@@ -7,7 +7,11 @@ import { Label } from "@/components/ui/label"
 
 
 
+
 export default function ImageUploader() {
+
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [images, setImages] = useState([]);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -59,7 +63,7 @@ export default function ImageUploader() {
     formData.append("isAdText", isAdText);
 
     try {
-      const response = await fetch("http://localhost:3001/api/ads/stabilityimg", {
+      const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
       });
