@@ -2,7 +2,11 @@ import { useState, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+
 export default function ImageUploader() {
+
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [images, setImages] = useState([]);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,7 +56,7 @@ export default function ImageUploader() {
     formData.append("prompt", description);
 
     try {
-      const response = await fetch("http://localhost:3001/api/ads/stabilityimg", {
+      const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
       });
