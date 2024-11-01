@@ -6,18 +6,17 @@ import { Label } from "@/components/ui/label"
 
 
 
-
-
 export default function ImageUploader() {
 
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-  const fileInputRef = useRef(null);
-  const [isAdText, setisAdText] = useState(false);
+  const [images, setImages] = useState([]); // Stores uploaded images
+  const [description, setDescription] = useState(''); // User-provided description
+  const [loading, setLoading] = useState(false); // Loading state indicator
+  const [imageUrl, setImageUrl] = useState(''); // Stores the generated image URL
+  const fileInputRef = useRef(null); // Reference to file input
+  const [isAdText, setisAdText] = useState(false); // Switch state for ad prompt
+  const [showOptions, setShowOptions] = useState(false); // Switch state for additional options
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -28,10 +27,12 @@ export default function ImageUploader() {
     setImages((prevImages) => [...prevImages, ...imageFiles]);
   };
 
+  // Removes an image from the list by index
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
+  // Handles drag-and-drop image upload
   const handleDrop = (event) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
@@ -50,6 +51,7 @@ export default function ImageUploader() {
     event.preventDefault();
     setImageUrl('');
 
+    // Validation, ensure there are images and description
     if (!images.length || !description) {
       alert("Täytä molemmat kentät!");
       return;
@@ -58,11 +60,12 @@ export default function ImageUploader() {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("img", images[0].file);
+    formData.append("img", images[0].file); // Only send the first image
     formData.append("prompt", description);
     formData.append("isAdText", isAdText);
 
     try {
+      // Send form data to backend API
       const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
@@ -74,33 +77,37 @@ export default function ImageUploader() {
 
       const data = await response.json();
       const base64Image = data.data;
-      const imgUrl = `data:image/png;base64,${base64Image}`;
-      setImageUrl(imgUrl);
+      const imgUrl = `data:image/png;base64,${base64Image}`; // Construct image URL
+      setImageUrl(imgUrl); // Update image URL state with received image
 
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
       alert("Tapahtui virhe.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
   };
 
+  // Stop loading once image has fully loaded in the component
   const handleImageLoad = () => {
     setLoading(false);
   };
 
+  // Downloads the generated image
   const downloadImage = () => {
     const link = document.createElement("a");
     link.href = imageUrl;
-    link.download = "stability.png";
+    link.download = "stability.png"; // Default download name
     link.click();
   };
 
+  // Toggle state for ad prompt switch
   const onCheckedChange = (isAdText) => {
     setisAdText(isAdText);
     console.log(isAdText)
   }
 
+  // Render UI
   return (
     <div className="w-full h-full flex justify-center items-center" style={{ width: '100%', height: '100%' }}>
       <Card className="w-full h-full max-w-4xl max-h-screen" style={{ width: '100%', height: '100%', padding: 100 }}>
@@ -189,6 +196,30 @@ export default function ImageUploader() {
               />
               <Label htmlFor="adprompt" className="text-sm">Do you want adprompt?</Label>
             </div>
+
+            <div className="flex  items-center space-x-2">
+              <Switch
+              className="scale-50"
+              checked={showOptions}
+              onCheckedChange={setShowOptions}
+            />
+            <span>Show additional options</span>
+            </div>
+
+            {showOptions && (
+              <div className="flex flex-col space-y-2 mt-4">
+                {/* Additional options can be added here */}
+                <label>
+                  <input type="checkbox" /> Option 1
+                </label>
+                <label>
+                  <input type="checkbox" /> Option 2
+                </label>
+                <label>
+                  <input type="checkbox" /> Option 3
+                </label>
+              </div>
+            )}
 
 
             <Button type="submit" className="buttoni">
