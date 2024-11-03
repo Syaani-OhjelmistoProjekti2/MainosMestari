@@ -212,7 +212,7 @@ export default function ImageUploader() {
             <div className="flex items-center space-x-2">
               <Switch
                 id="adprompt"
-                className="scale-50"
+                className="switch"
                 checked={isAdText}
                 onCheckedChange={onCheckedChange}
               />
@@ -223,7 +223,7 @@ export default function ImageUploader() {
 
             <div className="flex  items-center space-x-2">
               <Switch
-                className="scale-50"
+                className="switch"
                 checked={showOptions}
                 onCheckedChange={setShowOptions}
               />
