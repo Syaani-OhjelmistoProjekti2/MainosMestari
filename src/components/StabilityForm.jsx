@@ -2,22 +2,31 @@ import { useState, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label"
-
-
-
-
+import { Label } from "@/components/ui/label";
 
 export default function ImageUploader() {
-
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-  const fileInputRef = useRef(null);
-  const [isAdText, setisAdText] = useState(false);
+  const [images, setImages] = useState([]); // Stores uploaded images
+  const [description, setDescription] = useState(""); // User-provided description
+  const [loading, setLoading] = useState(false); // Loading state indicator
+  const [imageUrl, setImageUrl] = useState(""); // Stores the generated image URL
+  const fileInputRef = useRef(null); // Reference to file input
+  const [isAdText, setisAdText] = useState(false); // Switch state for ad prompt
+  const [showOptions, setShowOptions] = useState(false); // Switch state for additional options
+  const [selectedOptions, setSelectedOptions] = useState([]); // Tracks selected checkbox options
+
+  const handleOptionChange = (event) => {
+    const { value, checked } = event.target;
+
+    setSelectedOptions((prev) => {
+      if (checked) {
+        return [...prev, value]; // Add selected option
+      } else {
+        return prev.filter((option) => option !== value); // Remove unselected option
+      }
+    });
+  };
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -28,10 +37,12 @@ export default function ImageUploader() {
     setImages((prevImages) => [...prevImages, ...imageFiles]);
   };
 
+  // Removes an image from the list by index
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
+  // Handles drag-and-drop image upload
   const handleDrop = (event) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
@@ -48,8 +59,9 @@ export default function ImageUploader() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setImageUrl('');
+    setImageUrl("");
 
+    // Validation, ensure there are images and description
     if (!images.length || !description) {
       alert("Täytä molemmat kentät!");
       return;
@@ -58,11 +70,17 @@ export default function ImageUploader() {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("img", images[0].file);
+    formData.append("img", images[0].file); // Only send the first image
     formData.append("prompt", description);
     formData.append("isAdText", isAdText);
 
+    // Append selected options to formData
+    selectedOptions.forEach((option) => {
+      formData.append("selectedOptions[]", option);
+    });
+
     try {
+      // Send form data to backend API
       const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
@@ -74,36 +92,45 @@ export default function ImageUploader() {
 
       const data = await response.json();
       const base64Image = data.data;
-      const imgUrl = `data:image/png;base64,${base64Image}`;
-      setImageUrl(imgUrl);
-
+      const imgUrl = `data:image/png;base64,${base64Image}`; // Construct image URL
+      setImageUrl(imgUrl); // Update image URL state with received image
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
       alert("Tapahtui virhe.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
   };
 
+  // Stop loading once image has fully loaded in the component
   const handleImageLoad = () => {
     setLoading(false);
   };
 
+  // Downloads the generated image
   const downloadImage = () => {
     const link = document.createElement("a");
     link.href = imageUrl;
-    link.download = "stability.png";
+    link.download = "stability.png"; // Default download name
     link.click();
   };
 
+  // Toggle state for ad prompt switch
   const onCheckedChange = (isAdText) => {
     setisAdText(isAdText);
-    console.log(isAdText)
-  }
+    console.log(isAdText);
+  };
 
+  // Render UI
   return (
-    <div className="w-full h-full flex justify-center items-center" style={{ width: '100%', height: '100%' }}>
-      <Card className="w-full h-full max-w-4xl max-h-screen" style={{ width: '100%', height: '100%', padding: 100 }}>
+    <div
+      className="w-full h-full flex justify-center items-center"
+      style={{ width: "100%", height: "100%" }}
+    >
+      <Card
+        className="w-full h-full max-w-4xl max-h-screen"
+        style={{ width: "100%", height: "100%", padding: 100 }}
+      >
         <CardHeader>
           <CardTitle>Stability AI Form</CardTitle>
         </CardHeader>
@@ -116,12 +143,12 @@ export default function ImageUploader() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Syötä kuvaus Stability AI:lle"
               style={{
-                resize: 'none',
-                width: '100%',
-                height: '100px',
-                border: '1px solid #ccc',  // Raja ympärille
-                borderRadius: '4px',  // Pyöristetyt kulmat
-                padding: '8px'  // Tyhjää sisältöön
+                resize: "none",
+                width: "100%",
+                height: "100px",
+                border: "1px solid #ccc", // Raja ympärille
+                borderRadius: "4px", // Pyöristetyt kulmat
+                padding: "8px", // Tyhjää sisältöön
               }}
             />
             <div
@@ -131,7 +158,9 @@ export default function ImageUploader() {
             >
               <div className="flex items-center justify-center space-x-2">
                 <UploadIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-                <p className="text-zinc-500 dark:text-zinc-400">Drag & Drop your images here</p>
+                <p className="text-zinc-500 dark:text-zinc-400">
+                  Drag & Drop your images here
+                </p>
               </div>
               <div className="text-center mt-2">
                 <input
@@ -181,15 +210,61 @@ export default function ImageUploader() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Switch 
-              id="adprompt" 
-              className="scale-50"
-              checked={isAdText}
-              onCheckedChange={onCheckedChange}
+              <Switch
+                id="adprompt"
+                className="switch"
+                checked={isAdText}
+                onCheckedChange={onCheckedChange}
               />
-              <Label htmlFor="adprompt" className="text-sm">Do you want adprompt?</Label>
+              <Label htmlFor="adprompt" className="text-sm">
+                Do you want adprompt?
+              </Label>
             </div>
 
+            <div className="flex  items-center space-x-2">
+              <Switch
+                className="switch"
+                checked={showOptions}
+                onCheckedChange={setShowOptions}
+              />
+              <span>Show additional options</span>
+            </div>
+
+            {showOptions && (
+              <div className="flex flex-col space-y-2 mt-4">
+                {/* Additional options can be added here */}
+                <label>
+                  <input 
+                  type="checkbox"
+                  value="kestavyys"
+                  onChange={handleOptionChange} /> Kestävyys & laadukkuus
+                </label>
+                <label>
+                  <input
+                   type="checkbox"
+                   value="korjattavuus"
+                   onChange={handleOptionChange} /> Korjattavuus
+                </label>
+                <label>
+                  <input
+                   type="checkbox"
+                   value="huollettavuus"
+                   onChange={handleOptionChange} /> Huollettavuus
+                </label>
+                <label>
+                  <input 
+                  type="checkbox"
+                  value="paivitettavyys"
+                  onChange={handleOptionChange} /> Päivitettävyys
+                </label>
+                <label>
+                  <input 
+                  type="checkbox"
+                  value="kierratettavyys"
+                  onChange={handleOptionChange} /> Säilyttää arvon (kierrätettävyys)
+                </label>
+              </div>
+            )}
 
             <Button type="submit" className="buttoni">
               Submit
@@ -200,8 +275,15 @@ export default function ImageUploader() {
 
           {imageUrl && (
             <div className="mt-4">
-              <img src={imageUrl} alt="Vastaanotettu kuva" style={{ maxWidth: '300px' }} onLoad={handleImageLoad} />
-              <Button className='buttoni' onClick={downloadImage}>Lataa kuva</Button>
+              <img
+                src={imageUrl}
+                alt="Vastaanotettu kuva"
+                style={{ maxWidth: "300px" }}
+                onLoad={handleImageLoad}
+              />
+              <Button className="buttoni" onClick={downloadImage}>
+                Lataa kuva
+              </Button>
             </div>
           )}
         </CardContent>

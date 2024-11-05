@@ -112,3 +112,6 @@ button {
 	all: unset;
 }
 
+.switch {
+  padding: 0;
+}
