@@ -15,6 +15,7 @@ export default function ImageUploader() {
   const [isAdText, setisAdText] = useState(false); // Switch state for ad prompt
   const [showOptions, setShowOptions] = useState(false); // Switch state for additional options
   const [selectedOptions, setSelectedOptions] = useState([]); // Tracks selected checkbox options
+  const [adText, setAdText] = useState(""); // adtext
 
   const handleOptionChange = (event) => {
     const { value, checked } = event.target;
@@ -93,6 +94,12 @@ export default function ImageUploader() {
       const data = await response.json();
       const base64Image = data.data;
       const imgUrl = `data:image/png;base64,${base64Image}`; // Construct image URL
+
+      if (data.adText) {
+        const adPrompt = data.adText;
+        setAdText(adPrompt);
+      }
+     
       setImageUrl(imgUrl); // Update image URL state with received image
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
@@ -281,6 +288,10 @@ export default function ImageUploader() {
                 style={{ maxWidth: "300px" }}
                 onLoad={handleImageLoad}
               />
+
+              {adText && (
+                <p>{adText}</p>
+              )}
               <Button className="buttoni" onClick={downloadImage}>
                 Lataa kuva
               </Button>
