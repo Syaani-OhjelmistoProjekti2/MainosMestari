@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export default function ImageUploader() {
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  //const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [images, setImages] = useState([]); // Stores uploaded images
   const [description, setDescription] = useState(""); // User-provided description
@@ -79,7 +79,7 @@ export default function ImageUploader() {
 
     try {
       // Send form data to backend API
-      const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
+      const response = await fetch(`/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
       });
@@ -104,7 +104,7 @@ export default function ImageUploader() {
           formData.append("selectedOptions[]", option);
         });
 
-        const response = await fetch(`${apiUrl}/api/ads/getadtext`, {
+        const response = await fetch(`/api/ads/getadtext`, {
           method: "POST",
           body: formDataText,
         });
