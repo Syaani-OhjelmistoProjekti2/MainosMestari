@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "npm start"
+    "start": "vite preview"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.0",
