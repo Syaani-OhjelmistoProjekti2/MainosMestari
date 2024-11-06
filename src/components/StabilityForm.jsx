@@ -1,12 +1,10 @@
-import { useState, useRef } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { useRef, useState } from "react";
 
 export default function ImageUploader() {
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
-
   const [images, setImages] = useState([]); // Stores uploaded images
   const [description, setDescription] = useState(""); // User-provided description
   const [loading, setLoading] = useState(false); // Loading state indicator
@@ -82,7 +80,7 @@ export default function ImageUploader() {
 
     try {
       // Send form data to backend API
-      const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
+      const response = await fetch(`/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
       });
@@ -99,7 +97,7 @@ export default function ImageUploader() {
         const adPrompt = data.adText;
         setAdText(adPrompt);
       }
-     
+
       setImageUrl(imgUrl); // Update image URL state with received image
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
@@ -241,34 +239,44 @@ export default function ImageUploader() {
               <div className="flex flex-col space-y-2 mt-4">
                 {/* Additional options can be added here */}
                 <label>
-                  <input 
-                  type="checkbox"
-                  value="kestavyys"
-                  onChange={handleOptionChange} /> Kestävyys & laadukkuus
+                  <input
+                    type="checkbox"
+                    value="kestavyys"
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Kestävyys & laadukkuus
                 </label>
                 <label>
                   <input
-                   type="checkbox"
-                   value="korjattavuus"
-                   onChange={handleOptionChange} /> Korjattavuus
+                    type="checkbox"
+                    value="korjattavuus"
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Korjattavuus
                 </label>
                 <label>
                   <input
-                   type="checkbox"
-                   value="huollettavuus"
-                   onChange={handleOptionChange} /> Huollettavuus
+                    type="checkbox"
+                    value="huollettavuus"
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Huollettavuus
                 </label>
                 <label>
-                  <input 
-                  type="checkbox"
-                  value="paivitettavyys"
-                  onChange={handleOptionChange} /> Päivitettävyys
+                  <input
+                    type="checkbox"
+                    value="paivitettavyys"
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Päivitettävyys
                 </label>
                 <label>
-                  <input 
-                  type="checkbox"
-                  value="kierratettavyys"
-                  onChange={handleOptionChange} /> Säilyttää arvon (kierrätettävyys)
+                  <input
+                    type="checkbox"
+                    value="kierratettavyys"
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Säilyttää arvon (kierrätettävyys)
                 </label>
               </div>
             )}
@@ -289,9 +297,7 @@ export default function ImageUploader() {
                 onLoad={handleImageLoad}
               />
 
-              {adText && (
-                <p>{adText}</p>
-              )}
+              {adText && <p>{adText}</p>}
               <Button className="buttoni" onClick={downloadImage}>
                 Lataa kuva
               </Button>
