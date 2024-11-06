@@ -1,10 +1,12 @@
+import { useState, useRef } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useRef, useState } from "react";
+import { Label } from "@/components/ui/label";
 
 export default function ImageUploader() {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [images, setImages] = useState([]); // Stores uploaded images
   const [description, setDescription] = useState(""); // User-provided description
   const [loading, setLoading] = useState(false); // Loading state indicator
@@ -71,16 +73,13 @@ export default function ImageUploader() {
     const formData = new FormData();
     formData.append("img", images[0].file); // Only send the first image
     formData.append("prompt", description);
-    formData.append("isAdText", isAdText);
 
     // Append selected options to formData
-    selectedOptions.forEach((option) => {
-      formData.append("selectedOptions[]", option);
-    });
+
 
     try {
       // Send form data to backend API
-      const response = await fetch(`/api/ads/stabilityimg`, {
+      const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
       });
@@ -93,11 +92,31 @@ export default function ImageUploader() {
       const base64Image = data.data;
       const imgUrl = `data:image/png;base64,${base64Image}`; // Construct image URL
 
-      if (data.adText) {
+      /*if (data.adText) {
         const adPrompt = data.adText;
         setAdText(adPrompt);
-      }
+      }*/
 
+      if (isAdText) {
+        const formDataText = new FormData();
+        formDataText.append("img", images[0].file); // Only send the first image
+        selectedOptions.forEach((option) => {
+          formData.append("selectedOptions[]", option);
+        });
+
+        const response = await fetch(`${apiUrl}/api/ads/getadtext`, {
+          method: "POST",
+          body: formDataText,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setAdText(data.adText);
+      }
+     
       setImageUrl(imgUrl); // Update image URL state with received image
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
@@ -239,44 +258,34 @@ export default function ImageUploader() {
               <div className="flex flex-col space-y-2 mt-4">
                 {/* Additional options can be added here */}
                 <label>
-                  <input
-                    type="checkbox"
-                    value="kestavyys"
-                    onChange={handleOptionChange}
-                  />{" "}
-                  Kestävyys & laadukkuus
+                  <input 
+                  type="checkbox"
+                  value="kestavyys"
+                  onChange={handleOptionChange} /> Kestävyys & laadukkuus
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    value="korjattavuus"
-                    onChange={handleOptionChange}
-                  />{" "}
-                  Korjattavuus
+                   type="checkbox"
+                   value="korjattavuus"
+                   onChange={handleOptionChange} /> Korjattavuus
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    value="huollettavuus"
-                    onChange={handleOptionChange}
-                  />{" "}
-                  Huollettavuus
+                   type="checkbox"
+                   value="huollettavuus"
+                   onChange={handleOptionChange} /> Huollettavuus
                 </label>
                 <label>
-                  <input
-                    type="checkbox"
-                    value="paivitettavyys"
-                    onChange={handleOptionChange}
-                  />{" "}
-                  Päivitettävyys
+                  <input 
+                  type="checkbox"
+                  value="paivitettavyys"
+                  onChange={handleOptionChange} /> Päivitettävyys
                 </label>
                 <label>
-                  <input
-                    type="checkbox"
-                    value="kierratettavyys"
-                    onChange={handleOptionChange}
-                  />{" "}
-                  Säilyttää arvon (kierrätettävyys)
+                  <input 
+                  type="checkbox"
+                  value="kierratettavyys"
+                  onChange={handleOptionChange} /> Säilyttää arvon (kierrätettävyys)
                 </label>
               </div>
             )}
@@ -297,7 +306,9 @@ export default function ImageUploader() {
                 onLoad={handleImageLoad}
               />
 
-              {adText && <p>{adText}</p>}
+              {adText && (
+                <p>{adText}</p>
+              )}
               <Button className="buttoni" onClick={downloadImage}>
                 Lataa kuva
               </Button>
