@@ -160,7 +160,7 @@ export default function ImageUploader() {
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Syötä kuvaus Stability AI:lle"
+              placeholder="Describe the type of advertisement image you want the AI to create"
               style={{
                 resize: "none",
                 width: "100%",
@@ -292,25 +292,31 @@ export default function ImageUploader() {
 
           {loading && <p>Loading image...</p>}
 
-          {imageUrl && (
-            <div className="mt-4">
+      
+        </CardContent>
+      </Card>
+
+      {imageUrl && (
+        <Card className="w-full max-w-4xl">
+          <CardContent className="p-6">
+            <div className="space-y-4">
               <img
                 src={imageUrl}
                 alt="Vastaanotettu kuva"
-                style={{ maxWidth: "300px" }}
+                className="max-w-full h-auto rounded-lg mx-auto"
                 onLoad={handleImageLoad}
               />
-
               {adText && (
-                <p>{adText}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{adText}</p>
               )}
-              <Button className="buttoni" onClick={downloadImage}>
+              <Button onClick={downloadImage} className="w-full">
                 Lataa kuva
               </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
     </div>
   );
 }
