@@ -92,16 +92,11 @@ export default function ImageUploader() {
       const base64Image = data.data;
       const imgUrl = `data:image/png;base64,${base64Image}`; // Construct image URL
 
-      /*if (data.adText) {
-        const adPrompt = data.adText;
-        setAdText(adPrompt);
-      }*/
-
       if (isAdText) {
         const formDataText = new FormData();
         formDataText.append("img", images[0].file); // Only send the first image
         selectedOptions.forEach((option) => {
-          formData.append("selectedOptions[]", option);
+          formDataText.append("viewPoints", option);
         });
 
         const response = await fetch(`/api/ads/getadtext`, {
