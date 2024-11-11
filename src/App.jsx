@@ -12,7 +12,7 @@ function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Etusivu</Link>
+              <Link to="/">MainosMestari</Link>
             </li>
             <li>
               <Link to="/stability">Stability</Link>

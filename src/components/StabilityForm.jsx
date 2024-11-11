@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export default function ImageUploader() {
-  //const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [images, setImages] = useState([]); // Stores uploaded images
   const [description, setDescription] = useState(""); // User-provided description
@@ -13,7 +13,6 @@ export default function ImageUploader() {
   const [imageUrl, setImageUrl] = useState(""); // Stores the generated image URL
   const fileInputRef = useRef(null); // Reference to file input
   const [isAdText, setisAdText] = useState(false); // Switch state for ad prompt
-  const [showOptions, setShowOptions] = useState(false); // Switch state for additional options
   const [selectedOptions, setSelectedOptions] = useState([]); // Tracks selected checkbox options
   const [adText, setAdText] = useState(""); // adtext
 
@@ -79,7 +78,7 @@ export default function ImageUploader() {
 
     try {
       // Send form data to backend API
-      const response = await fetch(`/api/ads/stabilityimg`, {
+      const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
         method: "POST",
         body: formData,
       });
@@ -99,7 +98,7 @@ export default function ImageUploader() {
           formDataText.append("viewPoints", option);
         });
 
-        const response = await fetch(`/api/ads/getadtext`, {
+        const response = await fetch(`${apiUrl}/api/ads/getadtext`, {
           method: "POST",
           body: formDataText,
         });
@@ -107,11 +106,11 @@ export default function ImageUploader() {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         setAdText(data.adText);
       }
-     
+
       setImageUrl(imgUrl); // Update image URL state with received image
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
@@ -178,7 +177,7 @@ export default function ImageUploader() {
               <div className="flex items-center justify-center space-x-2">
                 <UploadIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
                 <p className="text-zinc-500 dark:text-zinc-400">
-                  Drag & Drop your images here
+                  Drag & Drop your image here
                 </p>
               </div>
               <div className="text-center mt-2">
@@ -236,68 +235,63 @@ export default function ImageUploader() {
                 onCheckedChange={onCheckedChange}
               />
               <Label htmlFor="adprompt" className="text-sm">
-                Do you want adprompt?
+                Generate advertisement text
               </Label>
             </div>
 
-            <div className="flex  items-center space-x-2">
-              <Switch
-                className="switch"
-                checked={showOptions}
-                onCheckedChange={setShowOptions}
-              />
-              <span>Show additional options</span>
-            </div>
 
-            {showOptions && (
+            {isAdText && (
+
               <div className="flex flex-col space-y-2 mt-4">
+
+              <h2 className="font-bold">Circular Economy Perspective</h2>
                 {/* Additional options can be added here */}
                 <label>
-                  <input 
-                  type="checkbox"
-                  value="kestavyys"
-                  onChange={handleOptionChange} /> Kestävyys & laadukkuus
+                  <input
+                    type="checkbox"
+                    value="durability"
+                    onChange={handleOptionChange} /> Durability & Quality
                 </label>
                 <label>
                   <input
-                   type="checkbox"
-                   value="korjattavuus"
-                   onChange={handleOptionChange} /> Korjattavuus
+                    type="checkbox"
+                    value="repairability"
+                    onChange={handleOptionChange} /> Repairability
                 </label>
                 <label>
                   <input
-                   type="checkbox"
-                   value="huollettavuus"
-                   onChange={handleOptionChange} /> Huollettavuus
+                    type="checkbox"
+                    value="maintainability"
+                    onChange={handleOptionChange} /> Maintainability
                 </label>
                 <label>
-                  <input 
-                  type="checkbox"
-                  value="paivitettavyys"
-                  onChange={handleOptionChange} /> Päivitettävyys
+                  <input
+                    type="checkbox"
+                    value="upgradability"
+                    onChange={handleOptionChange} /> Upgradability
                 </label>
                 <label>
-                  <input 
-                  type="checkbox"
-                  value="kierratettavyys"
-                  onChange={handleOptionChange} /> Säilyttää arvon (kierrätettävyys)
+                  <input
+                    type="checkbox"
+                    value="recyclability"
+                    onChange={handleOptionChange} /> Retains Value (Recyclability)
                 </label>
               </div>
             )}
 
+
             <Button type="submit" className="buttoni">
-              Submit
+              Generate AD
             </Button>
           </form>
 
           {loading && <p>Loading image...</p>}
 
-      
         </CardContent>
       </Card>
 
       {imageUrl && (
-        <Card className="w-full max-w-4xl">
+        <Card className="w-full max-w-4xl" style={{ marginLeft: 10 }}>
           <CardContent className="p-6">
             <div className="space-y-4">
               <img
@@ -309,8 +303,8 @@ export default function ImageUploader() {
               {adText && (
                 <p className="text-sm text-gray-600 dark:text-gray-400">{adText}</p>
               )}
-              <Button onClick={downloadImage} className="w-full">
-                Lataa kuva
+              <Button onClick={downloadImage} className="buttoni">
+                Download Image
               </Button>
             </div>
           </CardContent>
