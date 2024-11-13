@@ -75,7 +75,6 @@ export default function ImageUploader() {
 
     // Append selected options to formData
 
-
     try {
       // Send form data to backend API
       const response = await fetch(`${apiUrl}/api/ads/stabilityimg`, {
@@ -159,7 +158,7 @@ export default function ImageUploader() {
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe the type of advertisement image you want the AI to create"
+              placeholder="Kuvaile millaisen mainoskuvan haluat tekoälyn luovan" // Describe the type of advertisement image you want the AI to create
               style={{
                 resize: "none",
                 width: "100%",
@@ -177,7 +176,7 @@ export default function ImageUploader() {
               <div className="flex items-center justify-center space-x-2">
                 <UploadIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
                 <p className="text-zinc-500 dark:text-zinc-400">
-                  Drag & Drop your image here
+                  Vedä ja pudota kuva tänne {/*Drag & Drop your image here */}
                 </p>
               </div>
               <div className="text-center mt-2">
@@ -201,7 +200,7 @@ export default function ImageUploader() {
                       fileInputRef.current.click();
                     }}
                   >
-                    Or browse files
+                    Tai selaa tiedostoja {/* Or browse files */}
                   </Button>
                 </label>
               </div>
@@ -235,58 +234,63 @@ export default function ImageUploader() {
                 onCheckedChange={onCheckedChange}
               />
               <Label htmlFor="adprompt" className="text-sm">
-                Generate advertisement text
+                Generoi mainosteksti
               </Label>
             </div>
 
-
             {isAdText && (
-
               <div className="flex flex-col space-y-2 mt-4">
-
-              <h2 className="font-bold">Circular Economy Perspective</h2>
+                <h2 className="font-bold">Kiertotalousnäkökulma</h2>
                 {/* Additional options can be added here */}
                 <label>
                   <input
                     type="checkbox"
                     value="durability"
-                    onChange={handleOptionChange} /> Durability & Quality
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Kestävyys & laadukkuus
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="repairability"
-                    onChange={handleOptionChange} /> Repairability
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Korjattavuus
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="maintainability"
-                    onChange={handleOptionChange} /> Maintainability
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Huollettavuus
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="upgradability"
-                    onChange={handleOptionChange} /> Upgradability
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Päivitettävyys
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="recyclability"
-                    onChange={handleOptionChange} /> Retains Value (Recyclability)
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Säilyttää arvon (kierrätettävyys)
                 </label>
               </div>
             )}
 
-
             <Button type="submit" className="buttoni">
-              Generate AD
+              Generoi mainos {/* Generate AD */}
             </Button>
           </form>
 
-          {loading && <p>Loading image...</p>}
-
+          {loading && <p>Ladataan kuvaa...</p>}
         </CardContent>
       </Card>
 
@@ -301,7 +305,9 @@ export default function ImageUploader() {
                 onLoad={handleImageLoad}
               />
               {adText && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">{adText}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {adText}
+                </p>
               )}
               <Button onClick={downloadImage} className="buttoni">
                 Download Image
@@ -310,7 +316,6 @@ export default function ImageUploader() {
           </CardContent>
         </Card>
       )}
-
     </div>
   );
 }
