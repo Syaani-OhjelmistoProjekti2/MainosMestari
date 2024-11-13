@@ -1,26 +1,25 @@
 import { Button } from "./ui/button";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
 
 function Home() {
-    return (
-      <div>
-        <h1>Create stunning ad images in an instant</h1>
-        <p>
+  return (
+    <div>
+      <h1>Luo upeita mainoskuvia hetkessä</h1>
+      <p>
+        Tervetuloa sovellukseemme, joka käyttää tekoälyä luodakseen
+        ammattilaismaisia mainoskuvia huonekalujesi esittelyyn.
+        Helppokäyttöisellä alustallamme voit ladata oman kuvasi ja määritellä
+        mainoksen tyylin ja tunnelman. Tekoäly hoitaa loput, luoden
+        korkealaatuisia kuvia haluamassasi ympäristössä ja visuaalisessa
+        tyylissä."
+      </p>
 
-          Welcome to our app, which uses AI to generate professional advertisement images for your furniture. 
-          With our easy-to-use platform, you can upload your own image and define the style and mood of the ad. 
-          The AI takes care of the rest, delivering high-quality images in the environment and visual style you desire.
-          </p>
-
-        {/* Nappilinkki Stability-sivulle */}
+      {/* Nappilinkki Stability-sivulle */}
       <Link to="/stability">
-        <Button>Create Your Ad Image</Button>
+        <Button>Luo mainoskuvasi</Button>
       </Link>
-      </div>
-    );
-  }
+    </div>
+  );
+}
 
-  export default Home;
-
-  
+export default Home;
