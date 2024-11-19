@@ -16,7 +16,10 @@ function Home() {
 
       {/* Nappilinkki Stability-sivulle */}
       <Link to="/stability">
-        <Button>Luo mainoskuvasi</Button>
+        <Button>Luo mainoskuvasi stability1</Button>
+      </Link>
+      <Link to="/stability2">
+        <Button>Luo mainoskuvasi stability2</Button>
       </Link>
     </div>
   );
