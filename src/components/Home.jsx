@@ -11,7 +11,7 @@ function Home() {
         Helppokäyttöisellä alustallamme voit ladata oman kuvasi ja määritellä
         mainoksen tyylin ja tunnelman. Tekoäly hoitaa loput, luoden
         korkealaatuisia kuvia haluamassasi ympäristössä ja visuaalisessa
-        tyylissä."
+        tyylissä.
       </p>
 
       {/* Nappilinkki Stability-sivulle */}

@@ -29,28 +29,27 @@ export default function ImageUploader() {
   };
 
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
-    const imageFiles = files.map((file) => ({
+    const file = event.target.files[0];
+    const imageFile = {
       file,
       preview: URL.createObjectURL(file),
-    }));
-    setImages((prevImages) => [...prevImages, ...imageFiles]);
-  };
-
+    };
+    setImages([imageFile]); // Replace the current image with the new one
+  }
   // Removes an image from the list by index
-  const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  const handleRemoveImage = () => {
+    setImages([]);
   };
 
   // Handles drag-and-drop image upload
   const handleDrop = (event) => {
     event.preventDefault();
-    const files = Array.from(event.dataTransfer.files);
-    const imageFiles = files.map((file) => ({
+    const file = event.dataTransfer.files[0];
+    const imageFile = {
       file,
       preview: URL.createObjectURL(file),
-    }));
-    setImages((prevImages) => [...prevImages, ...imageFiles]);
+    };
+    setImages([imageFile]); // Replace the current image with the new one
   };
 
   const handleDragOver = (event) => {
@@ -140,14 +139,11 @@ export default function ImageUploader() {
 
   // Render UI
   return (
-    <div
-      className="w-full h-full flex justify-center items-center"
-      style={{ width: "100%", height: "100%" }}
+    <div className="w-full h-full flex justify-center items-center p-4">
+
+    <Card className="w-full max-w-4xl flex flex-col space-y-4 p-6"
+    style={{paddingLeft: 100, paddingRight: 100}}
     >
-      <Card
-        className="w-full h-full max-w-4xl max-h-screen"
-        style={{ width: "100%", height: "100%", padding: 100 }}
-      >
         <CardHeader>
           <CardTitle>Stability AI Form</CardTitle>
         </CardHeader>
@@ -206,13 +202,14 @@ export default function ImageUploader() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex justify-center">
               {images.map((image, index) => (
                 <div key={index} className="relative">
                   <img
                     src={image.preview}
                     alt={`Uploaded image ${index + 1}`}
-                    className="aspect-square object-cover border border-zinc-200 w-full rounded-lg overflow-hidden dark:border-zinc-800"
+                    className="aspect-square object-contain border border-zinc-200 w-full rounded-lg overflow-hidden dark:border-zinc-800"
+                    style={{ maxWidth: "300px", maxHeight: "300px" }}
                   />
                   <Button
                     variant="ghost"
