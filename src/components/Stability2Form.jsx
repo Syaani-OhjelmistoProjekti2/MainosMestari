@@ -79,6 +79,31 @@ export default function ImageUploader() {
         formData.append("prompt", description);
 
         // Append selected options to formData
+        /*
+        let progress = true
+
+        while(progress) {
+            const response = await axios.request({
+                url: `https://api.stability.ai/v2beta/results/${imageId}`,
+                method: "GET",
+                validateStatus: undefined,
+                headers: {
+                    Authorization: `Bearer ${stabilityAiKey}`,
+                    Accept: 'application/json', // Use 'application/json' to receive base64 encoded JSON
+                },
+                });
+            
+                console.log('Response status: ' + response.status)
+    
+                if (response.status === 404 || response.status === 202) {
+                    console.log("in progress")
+                    await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 5 seconds
+                } else {
+                    progress = false;
+                    return response.data.result;
+                }
+        }
+        */
 
         try {
             // Send form data to backend API
