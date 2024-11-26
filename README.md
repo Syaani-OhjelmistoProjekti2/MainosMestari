@@ -8,6 +8,8 @@ Sovelluksen avulla käyttäjät voivat määritellä mainoksen suuntaviivat, val
 
 Product backlog: [GitHub-projekti](https://github.com/orgs/Syaani-OhjelmistoProjekti2/projects/2)
 
+Julkaistu sovellus: [MainosMestari](https://mainosmestari-backend-mainosmestari.2.rahtiapp.fi/)
+
 ---
 
 ## Tekninen kuvaus
