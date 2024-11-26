@@ -1,59 +1,123 @@
 # MainosMestari
+
 ## Johdanto
-- Tehtävänä on kehittää webbisovellus, jonka avulla 2nd hand -kalusteiden kauppias voi tuottaa tekoälyä
-hyödyntäen kiertotaloushenkisiä mainoksia (esim. yritys- ja tuotemainokset) someen (esim. TikTok, IG,
-Facebook).
-Product backlog löytyy täältä: https://github.com/orgs/Syaani-OhjelmistoProjekti2/projects/2
-## Järjestelmän määrittely
-### Sovelluksen tärkeimmät ominaisuudet
-- Webbisivu, jossa voidaan määritellä suuntaviivat mainokselle (tekoälylle promptina kuvaa, tekstiä ja/tai saneluja)
-- Mahdollisuus valita somekanava, johon mainos on tarkoitettu 
-- Mahdollisuus määritellä mainoksen kiertotalouden näkökulma
-- Tekoäly tuottaa mainoksen ”räätälöidysti” valittuun kanavaan
-- Mahdollisuus ladata mainos omalla koneelle/suoraan someen
 
-## Käyttöliittymä
+MainosMestari on web-sovellus, joka hyödyntää tekoälyä kiertotaloushenkisten mainosten luomiseen. Sovellus on suunniteltu erityisesti 2nd hand -kalusteiden kauppiaille, mutta sitä voi käyttää laajemmin kiertotalouteen liittyvän markkinoinnin tueksi. 
 
-## Tietokanta
+Sovelluksen avulla käyttäjät voivat määritellä mainoksen suuntaviivat, valita somekanavan ja luoda räätälöidyn mainoksen ladattavaksi tai suoraan jaettavaksi.
+
+Product backlog: [GitHub-projekti](https://github.com/orgs/Syaani-OhjelmistoProjekti2/projects/2)
+
+---
+
 ## Tekninen kuvaus
 
-### 1. Frontend
-- **Käytetty teknologia**: React + Vite
-- **Kuvaus**: Frontend on toteutettu käyttäen React-kirjastoa ja Viteä kehitysympäristönä. React mahdollistaa komponenttipohjaisen arkkitehtuurin ja tehokkaan tilanhallinnan. Vite tarjoaa nopean kehitysympäristön sekä optimoi sovelluksen tuotantoversiot.
-  
+### Frontend
+- **Teknologia**: React + Vite
+- **Rakenteen kuvaus**:
+  - **Komponenttipohjaisuus**: Sovellus hyödyntää modulaarista rakennetta, joka tukee ylläpidettävyyttä ja laajennettavuutta.
+  - **Reititys**: React Router hallinnoi sovelluksen näkymiä.
+  - **Staattinen tarjoilu**: Frontend rakennetaan tuotantokäyttöön hakemistoon `dist` ja tarjoillaan backendin kautta portista 8080.
+
+### Backend
+- **Teknologia**: Node.js + Express
 - **Keskeiset ominaisuudet**:
-  - **Komponenttipohjainen rakenne**: React-komponenttien uudelleenkäyttö ja modulaarisuus helpottavat koodin ylläpitoa ja laajennettavuutta.
-  - **Tilanhallinta**: Sovelluksen tila hallitaan Reactin omien tilahallintamenetelmien (useState, useEffect) avulla.
-  - **Reititys**: React Router vastaa sovelluksen eri näkymien lataamisesta ja reitityksestä.
+  - RESTful API rajapinnat tiedonsiirtoon frontendin kanssa.
+  - Tekoälytoiminnot kuten kuvan- ja tekstinluonti Stability.ai- ja OpenAI-teknologioilla.
 
-- **Build- ja kehitystyökalut**:
-  - **Vite**: Vite takaa nopean kehitysympäristön ja optimoi sovelluksen tuotantokäyttöön. 
+### Tekoälymallit
+- **Kuvan generointi**: Stability.ai:n inpaint-ominaisuus.
+- **Tekstin generointi**: OpenAI:n API, joka luo mainostekstejä kuvan analyysin ja käyttäjän määrittämien näkökohtien perusteella.
 
-### 2. Backend
-- **Käytetty teknologia**: Node.js + Express.js
-- **Kuvaus**: Backend on toteutettu Node.js:llä ja Express.js-sovelluskehyksellä. Node.js:n avulla JavaScriptia voidaan käyttää palvelinpuolella, ja Express mahdollistaa kevyiden ja joustavien REST API -rajapintojen rakentamisen.
+### Automaatio ja julkaisu
+- Sovellus on julkaistu **CSC:n tarjoamassa Rahti 2 -palvelussa**, joka hyödyntää OpenShiftin konttipohjaista arkkitehtuuria.
+- Julkaisussa frontend tarjoillaan staattisesti `dist`-hakemistosta backendin kautta.
+- Backend ja frontend toimivat samassa kontissa, ja sovellus on konfiguroitu käyttämään porttia 8080.
+- YAML-konfiguraatio määrittää konttien rakennuksen, julkaisut ja webhookit, jotka automatisoivat GitHub-päivitysten julkaisun Rahdissa.
 
-- **Keskeiset ominaisuudet**:
-  - **RESTful API**: Backend tarjoaa REST API -rajapinnat, joita frontend käyttää kommunikoidakseen palvelimen kanssa. API tukee CRUD-toimintoja.
-  - **Tietokantaintegraatio**: Node.js integroituu käytettävään MongoDB-tietokantaan. ORM-työkaluna käytetään Mongoosea.
-  - **Middleware**: Express.js:n avulla käytetään middleware-komponentteja.
-  - **Asynkroninen ohjelmointi**: Node.js:n asynkroniset ominaisuudet mahdollistavat tehokkaan I/O-käsittelyn, kuten tietokantakyselyt ja API-kutsut.
+---
 
-### 3. DALLE-3 integraatio
-- **Käytetty tekoälymalli**: DALLE-3
-- **Kuvaus**: Sovelluksessa on integroitu OpenAI:n DALLE-3-malli, joka mahdollistaa kuvan generoinnin luonnollisella kielellä annettujen tekstikuvauksien perusteella. Malli on yhdistetty backend-puolelle, ja se tarjoaa kuvanluontitoiminnon käyttäjän määrittelemien syötteiden perusteella.
+## Asennusohjeet
 
-- **Keskeiset ominaisuudet**:
-  - **Tekstistä kuvaksi -generointi**: Sovellus mahdollistaa käyttäjien luoda kuvia tekstikuvauksien perusteella käyttäen DALLE-3-mallia. Käyttäjä voi syöttää tekstin frontendin kautta, ja backend kutsuu DALLE-3-mallia kuvan luomiseksi.
-  - **API-yhteys**: DALLE-3-mallia hyödynnetään kutsumalla OpenAI:n APIa backendin kautta, ja generoidut kuvat välitetään takaisin frontendille esitettäväksi.
+### Tarvittavat työkalut
+- Node.js (versio 16 tai uudempi)
+- Rahti 2 -palvelu (CSC:n tarjoama)
+- API-avaimet Stability.ai ja OpenAI-palveluihin.
 
+### Asennus
 
-### 4. Tietoturva ja suorituskyky
-- **CORS-suojaus**: CORS-käytännöt on määritetty hallitsemaan palvelimen ja frontendin välistä liikennettä.
+1. **Kloonaa projekti**
+   ```bash
+   git clone https://github.com/Syaani-OhjelmistoProjekti2/MainosMestari-backend.git
+   cd MainosMestari-backend
+   ```
 
+2. **Asenna riippuvuudet**
+   ```bash
+   npm install
+   ```
 
-## Testaus
-## Asennustiedot
-## Käynnistys- ja käyttöohje
-## Jäsenet
-Mikko Särkiniemi, Pinja Tirkkonen, Chak-Fung Tsang, Artur Golubev, Joni Tirkkonen
+3. **Määritä ympäristömuuttujat**
+   
+   Luo `.env`-tiedosto juurihakemistoon ja lisää seuraavat:
+   ```plaintext
+   STABILITY_KEY_API=syötä_API_avain
+   ```
+
+4. **Rakennus ja käynnistys**
+
+   - **Frontend**
+     ```bash
+     npm run build
+     ```
+
+   - **Backend**
+     ```bash
+     npm start
+     ```
+
+5. **Käynnistä palvelin**
+   
+   Sovellus on käytettävissä osoitteessa [http://localhost:8080](http://localhost:8080).
+
+---
+
+## Käyttö
+
+### Tekoälytoiminnot
+- **Kuvan käsittely**: Kuvan taustan poistaminen ja uuden taustan generointi Stability.ai:n avulla.
+- **Mainostekstin luonti**: OpenAI API:n avulla luodaan tekstejä analysoimalla käyttäjän lataamaa kuvaa.
+
+### Esimerkki API-kutsusta
+
+Stability.ai:n inpaint-kutsu:
+```javascript
+const response = await axios.post(
+    'https://api.stability.ai/v2beta/stable-image/edit/inpaint',
+    formData,
+    { headers: { Authorization: `Bearer ${STABILITY_KEY_API}` } }
+);
+```
+
+---
+
+## Tietoturva
+
+- **API-avaimet**: Säilytetään `.env`-tiedostossa.
+- **CORS**: Hallittu palvelimen ja frontendin välinen liikenne.
+- **Konfigurointi**: Varmista, ettei repositoriossa ole API-avaimia tai muita arkaluontoisia tietoja.
+
+---
+
+## Kehityssuunnitelmat
+- Lisää API-tukea muille tekoälymalleille.
+- Paranna käyttöliittymän saavutettavuutta.
+- Laajenna tietoturvaa OWASP Top 10 -haavoittuvuuksia vastaan.
+
+---
+
+## Yhteystiedot
+Projektitiimi: Mikko Särkiniemi, Pinja Tirkkonen, Chak-Fung Tsang, Artur Golubev, Joni Tirkkonen.
+
+GitHub-repositorio: [https://github.com/Syaani-OhjelmistoProjekti2/MainosMestari-backend](https://github.com/Syaani-OhjelmistoProjekti2/MainosMestari-backend)
+
