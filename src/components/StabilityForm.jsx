@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
+
 export default function ImageUploader() {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -15,6 +16,8 @@ export default function ImageUploader() {
   const [isAdText, setisAdText] = useState(false); // Switch state for ad prompt
   const [selectedOptions, setSelectedOptions] = useState([]); // Tracks selected checkbox options
   const [adText, setAdText] = useState(""); // adtext
+  const [isCopied, setIsCopied] = useState(false);
+
 
   const handleOptionChange = (event) => {
     const { value, checked } = event.target;
@@ -29,28 +32,30 @@ export default function ImageUploader() {
   };
 
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
-    const imageFiles = files.map((file) => ({
+    const file = event.target.files[0];
+    const imageFile = {
       file,
       preview: URL.createObjectURL(file),
-    }));
-    setImages((prevImages) => [...prevImages, ...imageFiles]);
-  };
-
+    };
+    setImages([imageFile]); // Replace the current image with the new one
+  }
   // Removes an image from the list by index
-  const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  const handleRemoveImage = () => {
+    setImages([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
   };
 
   // Handles drag-and-drop image upload
   const handleDrop = (event) => {
     event.preventDefault();
-    const files = Array.from(event.dataTransfer.files);
-    const imageFiles = files.map((file) => ({
+    const file = event.dataTransfer.files[0];
+    const imageFile = {
       file,
       preview: URL.createObjectURL(file),
-    }));
-    setImages((prevImages) => [...prevImages, ...imageFiles]);
+    };
+    setImages([imageFile]); // Replace the current image with the new one
   };
 
   const handleDragOver = (event) => {
@@ -60,6 +65,7 @@ export default function ImageUploader() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setImageUrl("");
+    setAdText("");
 
     // Validation, ensure there are images and description
     if (!images.length || !description) {
@@ -74,7 +80,6 @@ export default function ImageUploader() {
     formData.append("prompt", description);
 
     // Append selected options to formData
-
 
     try {
       // Send form data to backend API
@@ -139,18 +144,25 @@ export default function ImageUploader() {
     console.log(isAdText);
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(adText).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // Palautetaan alkuperäinen tila 2 sekunnin kuluttua
+    }).catch(err => {
+      console.error("Kopiointi epäonnistui:", err);
+    });
+  };
+
+
   // Render UI
   return (
-    <div
-      className="w-full h-full flex justify-center items-center"
-      style={{ width: "100%", height: "100%" }}
-    >
-      <Card
-        className="w-full h-full max-w-4xl max-h-screen"
-        style={{ width: "100%", height: "100%", padding: 100 }}
+    <div className="w-full h-full flex justify-center items-center p-4">
+
+      <Card className="w-full max-w-4xl flex flex-col space-y-4 p-6"
+        style={{ paddingLeft: 100, paddingRight: 100 }}
       >
         <CardHeader>
-          <CardTitle>Stability AI Form</CardTitle>
+          <CardTitle>Stability AI 1 Form</CardTitle>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
@@ -159,7 +171,7 @@ export default function ImageUploader() {
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe the type of advertisement image you want the AI to create"
+              placeholder="Kuvaile millaisen mainoskuvan haluat tekoälyn luovan" // Describe the type of advertisement image you want the AI to create
               style={{
                 resize: "none",
                 width: "100%",
@@ -177,7 +189,7 @@ export default function ImageUploader() {
               <div className="flex items-center justify-center space-x-2">
                 <UploadIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
                 <p className="text-zinc-500 dark:text-zinc-400">
-                  Drag & Drop your image here
+                  Vedä ja pudota kuva tänne {/*Drag & Drop your image here */}
                 </p>
               </div>
               <div className="text-center mt-2">
@@ -201,24 +213,25 @@ export default function ImageUploader() {
                       fileInputRef.current.click();
                     }}
                   >
-                    Or browse files
+                    Tai selaa tiedostoja {/* Or browse files */}
                   </Button>
                 </label>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex justify-center">
               {images.map((image, index) => (
                 <div key={index} className="relative">
                   <img
                     src={image.preview}
                     alt={`Uploaded image ${index + 1}`}
-                    className="aspect-square object-cover border border-zinc-200 w-full rounded-lg overflow-hidden dark:border-zinc-800"
+                    className="aspect-square object-contain border border-zinc-200 w-full rounded-lg overflow-hidden dark:border-zinc-800"
+                    style={{ maxWidth: "300px", maxHeight: "300px" }}
                   />
                   <Button
                     variant="ghost"
-                    className="absolute top-1 right-1 h-6 w-6 p-1"
-                    onClick={() => handleRemoveImage(index)}
+                    className="absolute top-1 right-1 h-6 w-6 p-1 custom-button"
+                    onClick={handleRemoveImage}
                   >
                     <XIcon className="h-4 w-4" />
                     <span className="sr-only">Remove image</span>
@@ -235,58 +248,63 @@ export default function ImageUploader() {
                 onCheckedChange={onCheckedChange}
               />
               <Label htmlFor="adprompt" className="text-sm">
-                Generate advertisement text
+                Generoi mainosteksti
               </Label>
             </div>
 
-
             {isAdText && (
-
               <div className="flex flex-col space-y-2 mt-4">
-
-              <h2 className="font-bold">Circular Economy Perspective</h2>
+                <h2 className="font-bold">Kiertotalousnäkökulma</h2>
                 {/* Additional options can be added here */}
                 <label>
                   <input
                     type="checkbox"
                     value="durability"
-                    onChange={handleOptionChange} /> Durability & Quality
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Kestävyys & laadukkuus
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="repairability"
-                    onChange={handleOptionChange} /> Repairability
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Korjattavuus
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="maintainability"
-                    onChange={handleOptionChange} /> Maintainability
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Huollettavuus
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="upgradability"
-                    onChange={handleOptionChange} /> Upgradability
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Päivitettävyys
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     value="recyclability"
-                    onChange={handleOptionChange} /> Retains Value (Recyclability)
+                    onChange={handleOptionChange}
+                  />{" "}
+                  Säilyttää arvon (kierrätettävyys)
                 </label>
               </div>
             )}
 
-
             <Button type="submit" className="buttoni">
-              Generate AD
+              Generoi mainos {/* Generate AD */}
             </Button>
           </form>
 
-          {loading && <p>Loading image...</p>}
-
+          {loading && <p>Ladataan kuvaa...</p>}
         </CardContent>
       </Card>
 
@@ -300,17 +318,54 @@ export default function ImageUploader() {
                 className="max-w-full h-auto rounded-lg mx-auto"
                 onLoad={handleImageLoad}
               />
-              {adText && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">{adText}</p>
-              )}
+           {adText && (
+  <form className="relative">
+    {/* Tekstikenttä */}
+    <textarea
+      value={adText}
+      onChange={(e) => setAdText(e.target.value)} // Lisää onChange, jos haluat päivittää tekstin
+      style={{
+        resize: "none",
+        width: "100%",
+        height: "500px",
+        border: "1px solid #ccc", // Raja ympärille
+        borderRadius: "4px", // Pyöristetyt kulmat
+        padding: "8px", // Tyhjää sisältöön
+        paddingTop: '40px', // Varmistetaan, että nappi ei peitä tekstiä
+      }}
+    />
+    {/* Kopioi-nappi tekstikentän oikeassa yläkulmassa */}
+    <button
+      type="button"
+      className="absolute top-2 right-2 bg-black text-gb-700 p-2 hover:bg-gray-500 transition-all border border-gray-300 rounded-md shadow-md hover:shadow-lg"
+      onClick={handleCopy}
+      style={{
+        width: "20px",  // Napin leveys
+        height: "10px", // Napin korkeus, korjattu arvo (aiempi oli liian pieni)
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "4px" // Kulmat pyöristetään vain vähän
+      }} // Napin koko
+    >
+      {isCopied ? (
+        <>
+        <CheckmarkIcon className="w-6 h-6 mx-auto text-white" /> 
+        </>
+      ) : (
+        <CopyIcon className="w-6 h-6 mx-auto text-white" /> // Kopiointi-ikoni
+      )}
+    </button>
+  </form>
+)}
+
               <Button onClick={downloadImage} className="buttoni">
-                Download Image
+                Lataa kuva
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
-
     </div>
   );
 }
@@ -355,3 +410,51 @@ function XIcon(props) {
     </svg>
   );
 }
+function CopyIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z"
+      />
+    </svg>
+  );
+}
+
+
+
+
+function CheckmarkIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+

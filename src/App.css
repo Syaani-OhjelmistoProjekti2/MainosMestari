@@ -44,7 +44,6 @@
 
 textarea {
   resize: none;
-  
 }
 
 .buttoni {
@@ -115,3 +114,31 @@ button {
 .switch {
   padding: 0;
 }
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border: 2px solid #030303;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #000101;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%) rotate(50deg);
+}
+

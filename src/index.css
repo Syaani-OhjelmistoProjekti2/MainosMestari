@@ -9,7 +9,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #ebe6e6; /* tämä pois */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -72,6 +72,12 @@ button:focus-visible {
   }
 
 }
+@media (prefers-color-scheme: dark) {
+  textarea {
+    background-color: white; /* Dark background */
+  }
+}
+
 
 @layer base {
   :root {
@@ -137,3 +143,19 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+.custom-button {
+  background-color: #fff; /* Valkoinen tausta */
+  color: #000; /* Musta teksti */
+  border: 1px solid #000; /* Musta reuna */
+}
+
+/* Tumma teema */
+@media (prefers-color-scheme: dark) {
+  .custom-button {
+    background-color: #fff; /* Valkoinen tausta */
+    color: #000; /* Musta teksti */
+    border: 1px solid #000; /* Musta reuna */
+  }
+}
+
