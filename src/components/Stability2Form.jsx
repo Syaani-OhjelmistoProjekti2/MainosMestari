@@ -79,31 +79,6 @@ export default function ImageUploader() {
         formData.append("prompt", description);
 
         // Append selected options to formData
-        /*
-        let progress = true
-
-        while(progress) {
-            const response = await axios.request({
-                url: `https://api.stability.ai/v2beta/results/${imageId}`,
-                method: "GET",
-                validateStatus: undefined,
-                headers: {
-                    Authorization: `Bearer ${stabilityAiKey}`,
-                    Accept: 'application/json', // Use 'application/json' to receive base64 encoded JSON
-                },
-                });
-            
-                console.log('Response status: ' + response.status)
-    
-                if (response.status === 404 || response.status === 202) {
-                    console.log("in progress")
-                    await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 5 seconds
-                } else {
-                    progress = false;
-                    return response.data.result;
-                }
-        }
-        */
 
         try {
             // Send form data to backend API
@@ -116,9 +91,32 @@ export default function ImageUploader() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
-            const base64Image = data.data;
-            const imgUrl = `data:image/png;base64,${base64Image}`; // Construct image URL
+            const imageId = await response.json();
+            let inProgress = true
+            let imageResult;
+
+            const formDataImage = new FormData();
+            formDataImage.append('imageId', imageId.imageId)
+
+            while(inProgress) {
+                console.log('toimii')
+                const imageResponse = await fetch(`${apiUrl}/api/ads/getimage`, {
+                    method: "POST",
+                    body: formDataImage
+                });
+                const data = await imageResponse.json();
+                console.log('Response status: ' + data.image)
+
+                if (data.image === 202) {
+                    console.log("in progress")
+                    await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds
+                } else {
+                    inProgress = false;
+                    imageResult = data.image;
+                }
+            }
+            const imgUrl = `data:image/png;base64,${imageResult}`; // Construct image URL
+            setImageUrl(imageUrl)
 
             if (isAdText) {
                 const formDataText = new FormData();

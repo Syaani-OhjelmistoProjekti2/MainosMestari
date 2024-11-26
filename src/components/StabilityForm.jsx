@@ -65,6 +65,7 @@ export default function ImageUploader() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setImageUrl("");
+    setAdText("");
 
     // Validation, ensure there are images and description
     if (!images.length || !description) {
