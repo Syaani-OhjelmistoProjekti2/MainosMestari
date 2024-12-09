@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
-
 export default function ImageUploader() {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,7 +16,6 @@ export default function ImageUploader() {
   const [selectedOptions, setSelectedOptions] = useState([]); // Tracks selected checkbox options
   const [adText, setAdText] = useState(""); // adtext
   const [isCopied, setIsCopied] = useState(false);
-
 
   const handleOptionChange = (event) => {
     const { value, checked } = event.target;
@@ -38,7 +36,7 @@ export default function ImageUploader() {
       preview: URL.createObjectURL(file),
     };
     setImages([imageFile]); // Replace the current image with the new one
-  }
+  };
   // Removes an image from the list by index
   const handleRemoveImage = () => {
     setImages([]);
@@ -145,20 +143,22 @@ export default function ImageUploader() {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(adText).then(() => {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // Palautetaan alkuperäinen tila 2 sekunnin kuluttua
-    }).catch(err => {
-      console.error("Kopiointi epäonnistui:", err);
-    });
+    navigator.clipboard
+      .writeText(adText)
+      .then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000); // Palautetaan alkuperäinen tila 2 sekunnin kuluttua
+      })
+      .catch((err) => {
+        console.error("Kopiointi epäonnistui:", err);
+      });
   };
-
 
   // Render UI
   return (
     <div className="w-full h-full flex justify-center items-center p-4">
-
-      <Card className="w-full max-w-4xl flex flex-col space-y-4 p-6"
+      <Card
+        className="w-full max-w-4xl flex flex-col space-y-4 p-6"
         style={{ paddingLeft: 100, paddingRight: 100 }}
       >
         <CardHeader>
@@ -318,46 +318,46 @@ export default function ImageUploader() {
                 className="max-w-full h-auto rounded-lg mx-auto"
                 onLoad={handleImageLoad}
               />
-           {adText && (
-  <form className="relative">
-    {/* Tekstikenttä */}
-    <textarea
-      value={adText}
-      onChange={(e) => setAdText(e.target.value)} // Lisää onChange, jos haluat päivittää tekstin
-      style={{
-        resize: "none",
-        width: "100%",
-        height: "500px",
-        border: "1px solid #ccc", // Raja ympärille
-        borderRadius: "4px", // Pyöristetyt kulmat
-        padding: "8px", // Tyhjää sisältöön
-        paddingTop: '40px', // Varmistetaan, että nappi ei peitä tekstiä
-      }}
-    />
-    {/* Kopioi-nappi tekstikentän oikeassa yläkulmassa */}
-    <button
-      type="button"
-      className="absolute top-2 right-2 bg-black text-gb-700 p-2 hover:bg-gray-500 transition-all border border-gray-300 rounded-md shadow-md hover:shadow-lg"
-      onClick={handleCopy}
-      style={{
-        width: "20px",  // Napin leveys
-        height: "10px", // Napin korkeus, korjattu arvo (aiempi oli liian pieni)
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "4px" // Kulmat pyöristetään vain vähän
-      }} // Napin koko
-    >
-      {isCopied ? (
-        <>
-        <CheckmarkIcon className="w-6 h-6 mx-auto text-white" /> 
-        </>
-      ) : (
-        <CopyIcon className="w-6 h-6 mx-auto text-white" /> // Kopiointi-ikoni
-      )}
-    </button>
-  </form>
-)}
+              {adText && (
+                <form className="relative">
+                  {/* Tekstikenttä */}
+                  <textarea
+                    value={adText}
+                    onChange={(e) => setAdText(e.target.value)} // Lisää onChange, jos haluat päivittää tekstin
+                    style={{
+                      resize: "none",
+                      width: "100%",
+                      height: "500px",
+                      border: "1px solid #ccc", // Raja ympärille
+                      borderRadius: "4px", // Pyöristetyt kulmat
+                      padding: "8px", // Tyhjää sisältöön
+                      paddingTop: "40px", // Varmistetaan, että nappi ei peitä tekstiä
+                    }}
+                  />
+                  {/* Kopioi-nappi tekstikentän oikeassa yläkulmassa */}
+                  <button
+                    type="button"
+                    className="absolute top-2 right-2 bg-black text-gb-700 p-2 hover:bg-gray-500 transition-all border border-gray-300 rounded-md shadow-md hover:shadow-lg"
+                    onClick={handleCopy}
+                    style={{
+                      width: "20px", // Napin leveys
+                      height: "10px", // Napin korkeus, korjattu arvo (aiempi oli liian pieni)
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "4px", // Kulmat pyöristetään vain vähän
+                    }} // Napin koko
+                  >
+                    {isCopied ? (
+                      <>
+                        <CheckmarkIcon className="w-6 h-6 mx-auto text-white" />
+                      </>
+                    ) : (
+                      <CopyIcon className="w-6 h-6 mx-auto text-white" /> // Kopiointi-ikoni
+                    )}
+                  </button>
+                </form>
+              )}
 
               <Button onClick={downloadImage} className="buttoni">
                 Lataa kuva
@@ -435,9 +435,6 @@ function CopyIcon(props) {
   );
 }
 
-
-
-
 function CheckmarkIcon(props) {
   return (
     <svg
@@ -456,5 +453,3 @@ function CheckmarkIcon(props) {
     </svg>
   );
 }
-
-

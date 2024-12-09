@@ -58,7 +58,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -70,14 +69,12 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-
 }
 @media (prefers-color-scheme: dark) {
   textarea {
     background-color: white; /* Dark background */
   }
 }
-
 
 @layer base {
   :root {
@@ -158,4 +155,3 @@ button:focus-visible {
     border: 1px solid #000; /* Musta reuna */
   }
 }
-

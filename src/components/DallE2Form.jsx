@@ -1,13 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 
 const DallE2Form = () => {
   const [previewImgUrl, setPreviewImgUrl] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
-
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -24,7 +23,7 @@ const DallE2Form = () => {
 
   const handleButtonPress = async (event) => {
     event.preventDefault();
-    setImageUrl('')
+    setImageUrl("");
     if (!selectedImage || !description) {
       alert("Täytä molemmat kentät!");
       return;
@@ -52,9 +51,9 @@ const DallE2Form = () => {
         const data = await response.json();
         setImageUrl(data[0].url);
 
-       //if (fileInputRef.current) {
-            //fileInputRef.current.value = null;
-         // }
+        //if (fileInputRef.current) {
+        //fileInputRef.current.value = null;
+        // }
       }
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
@@ -79,9 +78,14 @@ const DallE2Form = () => {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Syötä kuvaus Dall-E 2:lle"
         />
-        
+
         <div>
-          <input type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            ref={fileInputRef}
+          />
         </div>
 
         {previewImgUrl && (
@@ -90,17 +94,17 @@ const DallE2Form = () => {
               src={previewImgUrl}
               alt="Selected"
               style={{
-                maxWidth: '300px',
-                maxHeight: '300px',
-                objectFit: 'contain',
-                textAlign: 'center',
+                maxWidth: "300px",
+                maxHeight: "300px",
+                objectFit: "contain",
+                textAlign: "center",
               }}
             />
           </div>
         )}
 
         <button type="submit" className="buttoni">
-                Submit
+          Submit
         </button>
       </form>
 
@@ -108,7 +112,12 @@ const DallE2Form = () => {
 
       {imageUrl && (
         <div>
-          <img src={imageUrl} alt="Vastaanotettu kuva" style={{ maxWidth: '300px' }} onLoad={handleImageLoad}/>
+          <img
+            src={imageUrl}
+            alt="Vastaanotettu kuva"
+            style={{ maxWidth: "300px" }}
+            onLoad={handleImageLoad}
+          />
         </div>
       )}
     </div>
