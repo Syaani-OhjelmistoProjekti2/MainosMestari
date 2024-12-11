@@ -1,8 +1,8 @@
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import StabilityForm from "./components/StabilityForm";
-import StabilityForm2 from "./components/Stability2Form";
-import Home from "./components/Home";
+import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
+import Home from "./components/Home";
+import ImageUploader from "./components/ImageUploader";
+import StabilityForm from "./components/StabilityForm";
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/stability" element={<StabilityForm />} />
-            <Route path="/stability2" element={<StabilityForm2 />} />
+            <Route path="/stability2" element={<ImageUploader />} />
           </Routes>
         </div>
       </Router>
