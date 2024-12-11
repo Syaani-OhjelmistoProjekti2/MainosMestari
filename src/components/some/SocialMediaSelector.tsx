@@ -3,30 +3,65 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import { Image, Share2 } from "lucide-react";
+import { Facebook, Instagram, TikTok, Twitter } from "../icons";
 
-// Base types
+// Types
 export type BasePlatform = "instagram" | "facebook" | "twitter" | "tiktok";
 export type BaseFormat = "post" | "story" | "profile" | "cover";
 export type Platform = BasePlatform | "original";
 export type Format = BaseFormat | "original";
 
-// Format labels without 'original'
-const formatLabels: Record<BaseFormat, string> = {
+// Configuration objects with icon components
+const PLATFORM_CONFIG = {
+  instagram: {
+    name: "Instagram",
+    formats: ["post", "story", "profile"],
+    icon: Instagram,
+    color: "hover:text-[#E4405F]", // Instagram brand color
+  },
+  facebook: {
+    name: "Facebook",
+    formats: ["post", "story", "profile"],
+    icon: Facebook,
+    color: "hover:text-[#1877F2]", // Facebook brand color
+  },
+  twitter: {
+    name: "Twitter",
+    formats: ["post", "profile", "cover"],
+    icon: Twitter,
+    color: "hover:text-[#1DA1F2]", // Twitter brand color
+  },
+  tiktok: {
+    name: "TikTok",
+    formats: ["post", "story", "profile"],
+    icon: TikTok,
+    color: "hover:text-[#000000] dark:hover:text-white", // TikTok brand color
+  },
+} as const;
+
+const FORMAT_ICONS = {
+  post: <Share2 className="w-4 h-4" />,
+  story: <Image className="w-4 h-4" />,
+  profile: <Image className="w-4 h-4" />,
+  cover: <Image className="w-4 h-4" />,
+};
+
+const FORMAT_LABELS: Record<BaseFormat, string> = {
   post: "Julkaisu",
   story: "Tarina",
   profile: "Profiilikuva",
   cover: "Kansikuva",
 };
 
-// Platform formats without 'original'
-const platformFormats: Record<BasePlatform, BaseFormat[]> = {
-  instagram: ["post", "story", "profile"],
-  facebook: ["post", "story", "profile"],
-  twitter: ["post", "profile", "cover"],
-  tiktok: ["post", "story", "profile"],
+// Separate SocialIcon component
+const SocialIcon = ({ platform }: { platform: BasePlatform | "original" }) => {
+  if (platform === "original") {
+    return <Share2 className="w-4 h-4" />;
+  }
+  const IconComponent = PLATFORM_CONFIG[platform].icon;
+  return <IconComponent className="w-4 h-4" />;
 };
 
 interface SocialMediaSelectorProps {
@@ -36,38 +71,71 @@ interface SocialMediaSelectorProps {
   setSelectedFormat: (format: Format | "") => void;
 }
 
-const SocialMediaSelector: React.FC<SocialMediaSelectorProps> = ({
+const SocialMediaSelector = ({
   selectedPlatform,
   setSelectedPlatform,
   selectedFormat,
   setSelectedFormat,
-}) => {
+}: SocialMediaSelectorProps) => {
   const handlePlatformChange = (platform: Platform) => {
     setSelectedPlatform(platform);
-    if (platform === "original") {
-      setSelectedFormat("original");
-    } else {
-      setSelectedFormat("");
-    }
+    setSelectedFormat(platform === "original" ? "original" : "");
   };
 
   const getFormatsForPlatform = (platform: Platform) => {
     if (platform === "original") return [];
-    return platformFormats[platform as BasePlatform] || [];
+    return PLATFORM_CONFIG[platform as BasePlatform]?.formats || [];
+  };
+
+  // Erillinen komponentti valitun arvon näyttämiseen
+  const SelectedValueContent = ({ platform }: { platform: Platform | "" }) => {
+    if (!platform) return null;
+    if (platform === "original") {
+      return (
+        <div className="flex items-center gap-2">
+          <Share2 className="w-4 h-4" />
+          <span>Alkuperäinen</span>
+        </div>
+      );
+    }
+    const { icon: Icon, name } = PLATFORM_CONFIG[platform as BasePlatform];
+    return (
+      <div className="flex items-center gap-2">
+        <Icon className="w-4 h-4" />
+        <span>{name}</span>
+      </div>
+    );
   };
 
   return (
-    <div className="flex space-x-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
       <Select value={selectedPlatform} onValueChange={handlePlatformChange}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Valitse kuvatyyppi" />
+        <SelectTrigger className="w-full sm:w-48">
+          {selectedPlatform ? (
+            <SelectedValueContent platform={selectedPlatform} />
+          ) : (
+            <span className="text-muted-foreground">Valitse alusta</span>
+          )}
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="original">Alkuperäinen</SelectItem>
-          <SelectItem value="instagram">Instagram</SelectItem>
-          <SelectItem value="facebook">Facebook</SelectItem>
-          <SelectItem value="twitter">Twitter</SelectItem>
-          <SelectItem value="tiktok">TikTok</SelectItem>
+          <SelectItem value="original">
+            <div className="flex items-center gap-2">
+              <Share2 className="w-4 h-4" />
+              <span>Alkuperäinen</span>
+            </div>
+          </SelectItem>
+          {Object.entries(PLATFORM_CONFIG).map(
+            ([key, { name, icon: Icon, color }]) => (
+              <SelectItem key={key} value={key}>
+                <div
+                  className={`flex items-center gap-2 transition-colors ${color}`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{name}</span>
+                </div>
+              </SelectItem>
+            )
+          )}
         </SelectContent>
       </Select>
 
@@ -79,13 +147,23 @@ const SocialMediaSelector: React.FC<SocialMediaSelectorProps> = ({
             !selectedPlatform || (selectedPlatform as Platform) === "original"
           }
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Valitse julkaisutyyppi" />
+          <SelectTrigger className="w-full sm:w-48">
+            {selectedFormat ? (
+              <div className="flex items-center gap-2">
+                {FORMAT_ICONS[selectedFormat as BaseFormat]}
+                <span>{FORMAT_LABELS[selectedFormat as BaseFormat]}</span>
+              </div>
+            ) : (
+              <span className="text-muted-foreground">Valitse tyyppi</span>
+            )}
           </SelectTrigger>
           <SelectContent>
             {getFormatsForPlatform(selectedPlatform).map((format) => (
               <SelectItem key={format} value={format}>
-                {formatLabels[format]}
+                <div className="flex items-center gap-2">
+                  {FORMAT_ICONS[format]}
+                  <span>{FORMAT_LABELS[format]}</span>
+                </div>
               </SelectItem>
             ))}
           </SelectContent>

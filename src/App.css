@@ -1,141 +1,20 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(243 232 255),
+    rgb(255 255 255),
+    rgb(252 231 243)
+  );
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (prefers-color-scheme: dark) {
+  #root {
+    background-image: linear-gradient(
+      to bottom right,
+      rgb(17 24 39),
+      rgb(88 28 135 / 0.2),
+      rgb(17 24 39)
+    );
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-textarea {
-  resize: none;
-}
-
-.buttoni {
-  background-color: blue;
-  color: white;
-  margin-top: 50px;
-}
-
-.buttoni:hover {
-  background-color: blue;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Navigointipalkki */
-nav {
-  background-color: #333;
-  padding: 10px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
-
-/* Lista vierekkäin flexboxilla */
-nav ul {
-  display: flex;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  justify-content: center;
-}
-
-/* Yksittäiset navigointikohteet */
-nav ul li {
-  margin-right: 20px;
-}
-
-/* Linkit */
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-nav ul li a:hover {
-  background-color: #555;
-}
-
-.content {
-  margin-top: 60px; /* Navigointipalkin korkeus + lisätilaa */
-}
-
-/* reset */
-button {
-  all: unset;
-}
-
-.switch {
-  padding: 0;
-}
-
-input[type="checkbox"] {
-  appearance: none;
-  width: 15px;
-  height: 15px;
-  background-color: white;
-  border: 2px solid #030303;
-  border-radius: 4px;
-  display: inline-block;
-  position: relative;
-}
-
-input[type="checkbox"]:checked {
-  background-color: #000101;
-}
-
-input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%) rotate(50deg);
 }
