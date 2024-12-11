@@ -55,15 +55,6 @@ const FORMAT_LABELS: Record<BaseFormat, string> = {
   cover: "Kansikuva",
 };
 
-// Separate SocialIcon component
-const SocialIcon = ({ platform }: { platform: BasePlatform | "original" }) => {
-  if (platform === "original") {
-    return <Share2 className="w-4 h-4" />;
-  }
-  const IconComponent = PLATFORM_CONFIG[platform].icon;
-  return <IconComponent className="w-4 h-4" />;
-};
-
 interface SocialMediaSelectorProps {
   selectedPlatform: Platform | "";
   setSelectedPlatform: (platform: Platform | "") => void;
