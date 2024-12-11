@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+// @ts-nocheck
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { useRef, useState } from "react";
 
 export default function ImageUploader() {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;

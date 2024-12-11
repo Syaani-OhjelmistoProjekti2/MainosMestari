@@ -4,10 +4,7 @@ const require = createRequire(import.meta.url);
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}", // Polut JavaScript, TypeScript, React, jne. tiedostoihin
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       borderRadius: {

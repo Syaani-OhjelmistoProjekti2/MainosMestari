@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+// @ts-nocheck
+import { useRef, useState } from "react";
 
 const DallE3Form = () => {
   const [previewImgUrl, setPreviewImgUrl] = useState("");

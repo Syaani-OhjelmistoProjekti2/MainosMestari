@@ -1,25 +1,30 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useRef, useState } from "react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+
+interface ImageFile {
+  file: File;
+  preview: string;
+}
 
 export default function ImageUploader() {
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  const apiUrl = (import.meta.env.VITE_BACKEND_URL as string) || "";
 
-  const [images, setImages] = useState([]); // Stores uploaded images
-  const [description, setDescription] = useState(""); // User-provided description
-  const [loading, setLoading] = useState(false); // Loading state indicator
-  const [imageUrl, setImageUrl] = useState(""); // Stores the generated image URL
-  const fileInputRef = useRef(null); // Reference to file input
-  const [isAdText, setisAdText] = useState(false); // Switch state for ad prompt
-  const [selectedOptions, setSelectedOptions] = useState([]); // Tracks selected checkbox options
-  const [adText, setAdText] = useState(""); // adtext
+  const [images, setImages] = useState<ImageFile[]>([]);
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isAdText, setisAdText] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [adText, setAdText] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState("");
   const [adTextLoading, setAdTextLoading] = useState(false);
 
-  const handleOptionChange = (event) => {
+  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
 
     setSelectedOptions((prev) => {
@@ -31,22 +36,17 @@ export default function ImageUploader() {
     });
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    if (!file) {
-      return;
-    }
-
-    // Tarkista tiedoston tyyppi
     const validTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!validTypes.includes(file.type)) {
       alert("Vain JPEG, PNG ja WEBP kuvat ovat tuettuja.");
       return;
     }
 
-    // Tarkista tiedoston koko (max 4MB)
-    const maxSize = 4 * 1024 * 1024; // 4MB
+    const maxSize = 4 * 1024 * 1024;
     if (file.size > maxSize) {
       alert("Kuvan maksimikoko on 4MB");
       return;
@@ -63,6 +63,7 @@ export default function ImageUploader() {
       alert("Kuvan lataaminen epäonnistui");
     }
   };
+
   // Removes an image from the list by index
   const handleRemoveImage = () => {
     setImages([]);
@@ -72,21 +73,21 @@ export default function ImageUploader() {
   };
 
   // Handles drag-and-drop image upload
-  const handleDrop = (event) => {
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     const imageFile = {
       file,
       preview: URL.createObjectURL(file),
     };
-    setImages([imageFile]); // Replace the current image with the new one
+    setImages([imageFile]);
   };
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setImageUrl("");
     setAdText("");
@@ -175,7 +176,9 @@ export default function ImageUploader() {
             setAdText(data.adText);
           } catch (error) {
             console.error("Virhe mainostekstin generoinnissa:", error);
-            alert("Mainostekstin generointi epäonnistui: " + error.message);
+            if (error instanceof Error) {
+              alert("Mainostekstin generointi epäonnistui: " + error.message);
+            }
           } finally {
             setAdTextLoading(false);
           }
@@ -183,7 +186,9 @@ export default function ImageUploader() {
       }
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
-      alert("Tapahtui virhe: " + error.message);
+      if (error instanceof Error) {
+        alert("Tapahtui virhe: " + error.message);
+      }
     } finally {
       setLoadingStatus("");
       setLoading(false);
@@ -204,9 +209,9 @@ export default function ImageUploader() {
   };
 
   // Toggle state for ad prompt switch
-  const onCheckedChange = (isAdText) => {
-    setisAdText(isAdText);
-    console.log(isAdText);
+  const onCheckedChange = (checked: boolean) => {
+    setisAdText(checked);
+    console.log(checked);
   };
 
   const handleCopy = () => {
@@ -272,12 +277,13 @@ export default function ImageUploader() {
                 />
                 <label htmlFor="fileInput">
                   <Button
-                    as="span"
                     variant="outline"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       e.preventDefault();
-                      fileInputRef.current.click();
+                      if (fileInputRef.current) {
+                        fileInputRef.current.click();
+                      }
                     }}
                   >
                     Tai selaa tiedostoja {/* Or browse files */}
@@ -452,7 +458,11 @@ export default function ImageUploader() {
   );
 }
 
-function UploadIcon(props) {
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
+function UploadIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -473,7 +483,7 @@ function UploadIcon(props) {
   );
 }
 
-function XIcon(props) {
+function XIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -492,7 +502,7 @@ function XIcon(props) {
     </svg>
   );
 }
-function CopyIcon(props) {
+function CopyIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -516,7 +526,7 @@ function CopyIcon(props) {
     </svg>
   );
 }
-function CheckmarkIcon(props) {
+function CheckmarkIcon(props: IconProps) {
   return (
     <svg
       {...props}

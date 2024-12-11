@@ -1,6 +1,5 @@
 import react from "@vitejs/plugin-react";
 import path from "path";
-/*import mkcert from'vite-plugin-mkcert'*/
 import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
