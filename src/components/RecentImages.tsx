@@ -69,21 +69,3 @@ export const RecentImages: React.FC<RecentImagesProps> = ({
     </Card>
   );
 };
-[
-  {
-    id: "8764e958c71053a3c4beea043e6d3d79688b8e816912aa16258d6d5f65acf3d5",
-    timestamp: 1733990814226,
-  },
-  {
-    id: "df15580e87fa7163573be836474aef1042254a6623adb3b1a62178b69226bf49",
-    timestamp: 1733990380098,
-  },
-  {
-    id: "df15580e87fa7163573be836474aef1042254a6623adb3b1a62178b69226bf49",
-    timestamp: 1733990380098,
-  },
-  {
-    id: "df15580e87fa7163573be836474aef1042254a6623adb3b1a62178b69226bf49",
-    timestamp: 1733990380098,
-  },
-];

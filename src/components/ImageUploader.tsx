@@ -104,7 +104,7 @@ export default function ImageUploader() {
         event,
         images[0].file,
         description,
-        creativity,
+        creativity
       );
 
       if ("success" in result && result.success && result.imageId) {
@@ -129,7 +129,7 @@ export default function ImageUploader() {
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format,
+        selectedFormat as Format
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -155,7 +155,7 @@ export default function ImageUploader() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }}
-      className="min-h-screen py-12 px-4 w-full"
+      className="py-12 px-4 w-full"
     >
       {/* Test Controls */}
       {/* <div className="fixed top-4 right-4 z-50">
@@ -265,7 +265,7 @@ export default function ImageUploader() {
                           setSelectedOptions((prev) =>
                             checked
                               ? [...prev, value as CircularEconomyOption]
-                              : prev.filter((option) => option !== value),
+                              : prev.filter((option) => option !== value)
                           );
                         }}
                       />
