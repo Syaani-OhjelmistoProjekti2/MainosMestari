@@ -5,12 +5,14 @@ interface ImageUploadAreaProps {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
   onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
+  inputKey: number;
 }
 
 export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
   onFileChange,
   onDrop,
   onDragOver,
+  inputKey,
 }) => {
   return (
     <div
@@ -26,6 +28,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
       </div>
       <div className="text-center mt-2">
         <input
+          key={inputKey}
           name="fileInput"
           id="fileInput"
           type="file"

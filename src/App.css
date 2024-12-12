@@ -1,10 +1,8 @@
 #root {
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(243 232 255),
-    rgb(255 255 255),
-    rgb(252 231 243)
-  );
+  background-image: url("/beautiful-blue-002.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 @media (prefers-color-scheme: dark) {

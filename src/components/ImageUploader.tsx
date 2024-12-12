@@ -51,6 +51,7 @@ export default function ImageUploader() {
     handleRemoveImage,
     handleDrop,
     handleDragOver,
+    inputKey,
   } = useImageUpload();
 
   const {
@@ -219,17 +220,18 @@ export default function ImageUploader() {
 
                     <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4">
                       <ImageUploadArea
+                        inputKey={inputKey}
                         onFileChange={handleFileChange}
                         onDrop={handleDrop}
                         onDragOver={handleDragOver}
                       />
 
                       {images.length > 0 && (
-                        <div className="relative mt-4 max-w-sm mx-auto">
+                        <div className="relative mt-4 w-48 h-48 mx-auto">
                           <img
                             src={images[0].preview}
                             alt="Uploaded image"
-                            className="rounded-lg shadow-md w-full object-cover aspect-square"
+                            className="rounded-lg shadow-md w-full h-full object-cover"
                           />
                           <Button
                             variant="ghost"
