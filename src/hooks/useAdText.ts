@@ -20,7 +20,7 @@ export const useAdText = ({ apiUrl }: UseAdTextProps) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ prompt: imageDescription }),
-        }
+        },
       );
 
       if (!adTextResponse.ok) {

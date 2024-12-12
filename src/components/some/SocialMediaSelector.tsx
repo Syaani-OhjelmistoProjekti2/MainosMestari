@@ -10,7 +10,7 @@ import { Facebook, Instagram, TikTok, Twitter } from "../icons";
 // Types
 export type BasePlatform = "instagram" | "facebook" | "twitter" | "tiktok";
 export type BaseFormat = "post" | "story" | "profile" | "cover";
-export type Platform = BasePlatform | "original";
+export type Platform = BasePlatform | "original"; // Fix: Voi todenäköisesti yhdistää platform ja format tyypit
 export type Format = BaseFormat | "original";
 
 // Configuration objects with icon components
@@ -84,7 +84,7 @@ const SocialMediaSelector = ({
     if (platform === "original") {
       return (
         <div className="flex items-center gap-2">
-          <Share2 className="w-4 h-4" />
+          <Image className="w-4 h-4" />
           <span>Alkuperäinen</span>
         </div>
       );
@@ -111,7 +111,7 @@ const SocialMediaSelector = ({
         <SelectContent>
           <SelectItem value="original">
             <div className="flex items-center gap-2">
-              <Share2 className="w-4 h-4" />
+              <Image className="w-4 h-4" />
               <span>Alkuperäinen</span>
             </div>
           </SelectItem>
@@ -125,7 +125,7 @@ const SocialMediaSelector = ({
                   <span>{name}</span>
                 </div>
               </SelectItem>
-            )
+            ),
           )}
         </SelectContent>
       </Select>

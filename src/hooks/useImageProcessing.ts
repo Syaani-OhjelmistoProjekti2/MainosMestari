@@ -5,6 +5,18 @@ interface UseImageProcessingProps {
   apiUrl: string;
 }
 
+interface SuccessResult {
+  success: true;
+  newDescription: string;
+  imageId: string;
+}
+
+interface ImageApiResponse {
+  imageId: string;
+  promptStatus: string;
+  description: string;
+}
+
 export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -14,8 +26,9 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
     file: File,
-    description: string
-  ) => {
+    description: string,
+    creativity: boolean,
+  ): Promise<SuccessResult> => {
     event.preventDefault();
     setImageUrl("");
     setLoading(true);
@@ -24,6 +37,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
     const formData = new FormData();
     formData.append("img", file);
     formData.append("prompt", description);
+    formData.append("creativity", creativity.toString());
 
     try {
       const response = await fetch(`${apiUrl}/api/ads/image`, {
@@ -35,8 +49,9 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      const newDescription = data.description;
+      const data: ImageApiResponse = await response.json();
+      const imageId = data.imageId;
+      const newDescription: string = data.description;
       setImageDescription(newDescription);
 
       if (!data.imageId) {
@@ -48,7 +63,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
 
       while (inProgress) {
         const formDataImage = new FormData();
-        formDataImage.append("imageId", data.imageId);
+        formDataImage.append("imageId", imageId);
 
         const imageResponse = await fetch(`${apiUrl}/api/ads/getimage`, {
           method: "POST",
@@ -70,11 +85,12 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
           const imgUrl = `data:image/png;base64,${imageData.image}`;
           setImageUrl(imgUrl);
           inProgress = false;
-          return newDescription;
+          return { success: true, newDescription, imageId: imageId };
         } else {
           throw new Error("Kuvan hakeminen epäonnistui");
         }
       }
+      throw new Error("Kuvan hakeminen epäonnistui");
     } catch (error) {
       console.error("Virhe lähetyksessä:", error);
       throw error;
@@ -86,7 +102,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
 
   const downloadImage = async (
     selectedPlatform: Platform,
-    selectedFormat: Format
+    selectedFormat: Format,
   ) => {
     try {
       if (!imageUrl || !selectedPlatform || !selectedFormat) {

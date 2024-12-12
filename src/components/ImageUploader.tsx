@@ -1,17 +1,21 @@
 import { useAdText } from "@/hooks/useAdText";
 import { useImageProcessing } from "@/hooks/useImageProcessing";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useRecentImages } from "@/hooks/useRecentImages";
 import { ArrowLeft, CopyIcon, ImageIcon, Loader2, XIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { AdTextOptions } from "./AdTextOptions";
 import { CheckmarkIcon } from "./icons";
 import { ImageUploadArea } from "./ImageUploadArea";
+import { RecentImages } from "./RecentImages";
 import SocialMediaSelector, {
   Format,
   Platform,
 } from "./some/SocialMediaSelector";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 
 type Step = "input" | "loading" | "output";
 
@@ -31,14 +35,14 @@ Ota yhteyttä ja tee elämäsi design-löytö! 📞`;
 
 export default function ImageUploader() {
   const apiUrl = (import.meta.env.VITE_BACKEND_URL as string) || "";
-
+  const [creativity, setCreativity] = useState(false);
   const [currentStep, setCurrentStep] = useState<Step>("input");
   const [description, setDescription] = useState("");
   const [isAdText, setIsAdText] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | "">("");
   const [selectedFormat, setSelectedFormat] = useState<Format | "">("");
-
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const {
     images,
     handleFileChange,
@@ -76,6 +80,8 @@ export default function ImageUploader() {
     setCurrentStep("input");
   };
 
+  const { addRecentImage } = useRecentImages({ apiUrl });
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -86,14 +92,20 @@ export default function ImageUploader() {
 
     try {
       setCurrentStep("loading");
-      const newDescription = await handleSubmit(
+
+      const result = await handleSubmit(
         event,
         images[0].file,
-        description
+        description,
+        creativity,
       );
 
-      if (isAdText && newDescription) {
-        await generateAdText(newDescription);
+      if ("success" in result && result.success && result.imageId) {
+        addRecentImage(result.imageId);
+        setRefreshTrigger((prev) => prev + 1);
+        if (isAdText && result.newDescription) {
+          await generateAdText(result.newDescription);
+        }
       }
 
       setCurrentStep("output");
@@ -109,7 +121,7 @@ export default function ImageUploader() {
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format
+        selectedFormat as Format,
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -234,10 +246,18 @@ export default function ImageUploader() {
                     setSelectedOptions((prev) =>
                       checked
                         ? [...prev, value]
-                        : prev.filter((option) => option !== value)
+                        : prev.filter((option) => option !== value),
                     );
                   }}
                 />
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="creativity"
+                    checked={creativity}
+                    onCheckedChange={setCreativity}
+                  />
+                  <Label>Luova moodi (vapaampi tulkinta kuvasta)</Label>
+                </div>
 
                 <Button
                   type="submit"
@@ -332,6 +352,11 @@ export default function ImageUploader() {
             </Card>
           </div>
         )}
+        <Suspense fallback={<p>Viimeisiä kuvia ladataan...</p>}>
+          <div className="max-w-4xl mx-auto space-y-8">
+            <RecentImages apiUrl={apiUrl} refreshTrigger={refreshTrigger} />
+          </div>
+        </Suspense>
       </div>
     </div>
   );
