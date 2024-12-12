@@ -14,6 +14,7 @@ import SocialMediaSelector, {
   Format,
   Platform,
 } from "./some/SocialMediaSelector";
+import { TooltipButton } from "./ToolTipButton";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
@@ -100,7 +101,7 @@ export default function ImageUploader() {
         event,
         images[0].file,
         description,
-        creativity,
+        creativity
       );
 
       if ("success" in result && result.success && result.imageId) {
@@ -124,7 +125,7 @@ export default function ImageUploader() {
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format,
+        selectedFormat as Format
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -254,7 +255,7 @@ export default function ImageUploader() {
                         setSelectedOptions((prev) =>
                           checked
                             ? [...prev, value]
-                            : prev.filter((option) => option !== value),
+                            : prev.filter((option) => option !== value)
                         );
                       }}
                     />
@@ -267,13 +268,20 @@ export default function ImageUploader() {
                       <Label>Luova moodi (vapaampi tulkinta kuvasta)</Label>
                     </div>
 
-                    <Button
+                    <TooltipButton
                       type="submit"
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                      className="bg-blue-600 hover:bg-blue-700 text-white transition-colors"
                       disabled={!images.length || !description}
+                      tooltipMessage={
+                        !images.length && !description
+                          ? "Lisää kuva ja kuvaus jatkaaksesi"
+                          : !images.length
+                            ? "Lisää kuva jatkaaksesi"
+                            : "Lisää kuvaus jatkaaksesi"
+                      }
                     >
                       Luo mainoskuva
-                    </Button>
+                    </TooltipButton>
                   </form>
                 </CardContent>
               </Card>
