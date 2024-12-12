@@ -4,7 +4,7 @@ import ImageUploader from "./components/ImageUploader";
 
 function App() {
   return (
-    <main className="min-h-screen">
+    <main className="h-screen overflow-y-auto">
       <Header />
       <ImageUploader />
     </main>
