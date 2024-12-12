@@ -4,7 +4,7 @@ import GradualSpacing from "./ui/gradual-spacing";
 function Header() {
   return (
     <div className="pt-10 md:pt-14 flex align-middle flex-col items-center px-4 md:px-0 ">
-      <div className="text-center space-y-4 md:space-y-5 max-w-sm md:max-w-2xl mx-auto shadow-2xl bg-black/20 p-2 md:p-4 rounded-2xl">
+      <div className="text-center space-y-4 md:space-y-5 max-w-sm md:max-w-2xl mx-auto shadow-2xl backdrop-blur-sm bg-gradient-to-r from-black/10 via-black/20 to-black/10 p-2 md:p-4 rounded-2xl">
         <motion.h1
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}

@@ -1,10 +1,11 @@
+import { CircularEconomyOption, circularEconomySelects } from "@/lib/types";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
 interface AdTextOptionsProps {
   isAdText: boolean;
   onCheckedChange: (checked: boolean) => void;
-  selectedOptions: string[];
+  selectedOptions: CircularEconomyOption[];
   onOptionChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -31,26 +32,16 @@ export const AdTextOptions: React.FC<AdTextOptionsProps> = ({
       {isAdText && (
         <div className="flex flex-col space-y-2 mt-4">
           <h2 className="font-bold">Kiertotalousnäkökulma</h2>
-          {[
-            "durability",
-            "repairability",
-            "maintainability",
-            "upgradability",
-            "recyclability",
-          ].map((option) => (
-            <label key={option}>
+          {circularEconomySelects.map(({ key, label }) => (
+            <label key={key} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                value={option}
-                checked={selectedOptions.includes(option)}
+                value={key}
+                checked={selectedOptions.includes(key)}
                 onChange={onOptionChange}
-              />{" "}
-              {option === "durability" && "Kestävyys & laadukkuus"}
-              {option === "repairability" && "Korjattavuus"}
-              {option === "maintainability" && "Huollettavuus"}
-              {option === "upgradability" && "Päivitettävyys"}
-              {option === "recyclability" &&
-                "Säilyttää arvon (kierrätettävyys)"}
+                className="rounded border-gray-300"
+              />
+              <span>{label}</span>
             </label>
           ))}
         </div>

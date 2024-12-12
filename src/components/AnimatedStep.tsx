@@ -3,17 +3,10 @@ import React from "react";
 
 interface AnimatedStepProps {
   children: React.ReactNode;
-  isVisible: boolean;
   stepKey: string;
 }
 
-export const AnimatedStep = ({
-  children,
-  isVisible,
-  stepKey,
-}: AnimatedStepProps) => {
-  if (!isVisible) return null;
-
+export const AnimatedStep = ({ children, stepKey }: AnimatedStepProps) => {
   return (
     <motion.div
       key={stepKey}

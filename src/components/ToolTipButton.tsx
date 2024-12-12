@@ -1,9 +1,9 @@
 import { Button, ButtonProps } from "@/components/ui/button";
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import React from "react";
 
@@ -23,7 +23,11 @@ export const TooltipButton = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="w-full">
-            <Button {...buttonProps} disabled={disabled} className={`w-full ${buttonProps.className}`}>
+            <Button
+              {...buttonProps}
+              disabled={disabled}
+              className={`w-full ${buttonProps.className}`}
+            >
               {children}
             </Button>
           </div>

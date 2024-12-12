@@ -18,12 +18,9 @@ export const RecentImages: React.FC<RecentImagesProps> = ({
 
   useEffect(() => {
     loadRecentImages();
-    console.log("Recent images loaded");
   }, [loadRecentImages, refreshTrigger]);
 
   if (recentImages.length === 0) {
-    console.log("No recent images found");
-
     return null;
   }
 

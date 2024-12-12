@@ -4,12 +4,19 @@ interface UseAdTextProps {
   apiUrl: string;
 }
 
+interface AdTextApiResponse {
+  generatedAdText: string;
+}
+
 export const useAdText = ({ apiUrl }: UseAdTextProps) => {
   const [adText, setAdText] = useState("");
   const [adTextLoading, setAdTextLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  const generateAdText = async (imageDescription: string) => {
+  const generateAdText = async (
+    imageDescription: string,
+    selectedOptions: string[],
+  ): Promise<void> => {
     setAdTextLoading(true);
     try {
       const adTextResponse = await fetch(
@@ -19,7 +26,10 @@ export const useAdText = ({ apiUrl }: UseAdTextProps) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ prompt: imageDescription }),
+          body: JSON.stringify({
+            prompt: imageDescription,
+            options: selectedOptions,
+          }),
         },
       );
 
@@ -27,8 +37,9 @@ export const useAdText = ({ apiUrl }: UseAdTextProps) => {
         throw new Error(`HTTP error! status: ${adTextResponse.status}`);
       }
 
-      const adTextData = await adTextResponse.json();
-      setAdText(adTextData.newPrompt);
+      const adTextData: AdTextApiResponse = await adTextResponse.json();
+
+      setAdText(adTextData.generatedAdText);
     } catch (error) {
       console.error("Virhe mainostekstin generoinnissa:", error);
       throw error;

@@ -106,8 +106,6 @@ export const useRecentImages = ({ apiUrl }: UseRecentImagesProps) => {
 
   const addRecentImage = useCallback(
     (imageId: string) => {
-      console.log("Adding new image with ID:", imageId);
-
       const currentStoredImages = localStorage.getItem("recentImages");
       const currentImages: StoredImage[] = currentStoredImages
         ? JSON.parse(currentStoredImages)
