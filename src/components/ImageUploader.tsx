@@ -49,6 +49,7 @@ export default function ImageUploader() {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | "">("");
   const [selectedFormat, setSelectedFormat] = useState<Format | "">("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [showRecentImages, setShowRecentImages] = useState(true);
   const {
     images,
     handleFileChange,
@@ -60,6 +61,7 @@ export default function ImageUploader() {
 
   const {
     imageUrl,
+    loading,
     loadingStatus,
     setLoadingStatus,
     imageDescription,
@@ -87,10 +89,11 @@ export default function ImageUploader() {
     setCurrentStep("input");
   };
 
-  const { addRecentImage } = useRecentImages({ apiUrl });
+  const { addRecentImage, loadRecentImages } = useRecentImages({ apiUrl });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setShowRecentImages(false);
 
     if (!images.length || !description) {
       alert("Täytä molemmat kentät!");
@@ -108,7 +111,8 @@ export default function ImageUploader() {
       );
 
       if ("success" in result && result.success && result.imageId) {
-        addRecentImage(result.imageId);
+        await addRecentImage(result.imageId);
+        await loadRecentImages();
         setRefreshTrigger((prev) => prev + 1);
         setCurrentStep("output");
 
@@ -116,11 +120,13 @@ export default function ImageUploader() {
           setLoadingStatus("Generoidaan mainostekstiä...");
           await generateAdText(result.newDescription, selectedOptions);
         }
+        setShowRecentImages(true);
       }
     } catch (error) {
       if (error instanceof Error) {
         alert("Tapahtui virhe: " + error.message);
         setCurrentStep("input");
+        setShowRecentImages(true);
       }
     }
   };
@@ -158,7 +164,7 @@ export default function ImageUploader() {
       className="py-12 px-4 w-full"
     >
       {/* Test Controls */}
-      {/* <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <Card className="w-64">
           <CardHeader className="py-3">
             <CardTitle className="text-sm">Testaustoiminnot</CardTitle>
@@ -168,7 +174,7 @@ export default function ImageUploader() {
               onClick={() =>
                 generateAdText(
                   "Hyvä kuntoinen tuoli valkoisella kankaalla",
-                  selectedOptions
+                  selectedOptions,
                 )
               }
               variant="outline"
@@ -189,7 +195,7 @@ export default function ImageUploader() {
             )}
           </CardContent>
         </Card>
-      </div> */}
+      </div>
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto space-y-8">
@@ -335,23 +341,7 @@ export default function ImageUploader() {
                       />
                     </div>
 
-                    <div className="space-y-4">
-                      <SocialMediaSelector
-                        selectedPlatform={selectedPlatform}
-                        setSelectedPlatform={setSelectedPlatform}
-                        selectedFormat={selectedFormat}
-                        setSelectedFormat={setSelectedFormat}
-                      />
-
-                      <Button
-                        onClick={handleDownload}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors"
-                        disabled={!selectedPlatform || !selectedFormat}
-                      >
-                        Lataa kuva
-                      </Button>
-                    </div>
-                    {isAdText && (
+                    {isAdText ? (
                       <div className="relative">
                         {adTextLoading ? (
                           <div className="flex flex-col items-center justify-center p-8 space-y-4">
@@ -361,25 +351,66 @@ export default function ImageUploader() {
                             </p>
                           </div>
                         ) : adText ? (
-                          <div className="relative">
-                            <textarea
-                              value={adText}
-                              onChange={(e) => setAdText(e.target.value)}
-                              className="w-full h-64 rounded-lg border border-gray-300 dark:border-gray-600 p-4 resize-none"
-                            />
-                            <Button
-                              size="icon"
-                              className="absolute top-2 right-2"
-                              onClick={handleCopy}
+                          <>
+                            <div className="relative">
+                              <textarea
+                                value={adText}
+                                onChange={(e) => setAdText(e.target.value)}
+                                className="w-full h-64 rounded-lg border border-gray-300 dark:border-gray-600 p-4 resize-none"
+                              />
+                              <Button
+                                size="icon"
+                                className="absolute top-2 right-2"
+                                onClick={handleCopy}
+                              >
+                                {isCopied ? (
+                                  <CheckmarkIcon className="h-4 w-4" />
+                                ) : (
+                                  <CopyIcon className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.5 }}
+                              className="space-y-4 mt-6"
                             >
-                              {isCopied ? (
-                                <CheckmarkIcon className="h-4 w-4" />
-                              ) : (
-                                <CopyIcon className="h-4 w-4" />
-                              )}
-                            </Button>
-                          </div>
+                              <SocialMediaSelector
+                                selectedPlatform={selectedPlatform}
+                                setSelectedPlatform={setSelectedPlatform}
+                                selectedFormat={selectedFormat}
+                                setSelectedFormat={setSelectedFormat}
+                              />
+
+                              <Button
+                                onClick={handleDownload}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors"
+                                disabled={!selectedPlatform || !selectedFormat}
+                              >
+                                Lataa kuva
+                              </Button>
+                            </motion.div>
+                          </>
                         ) : null}
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <SocialMediaSelector
+                          selectedPlatform={selectedPlatform}
+                          setSelectedPlatform={setSelectedPlatform}
+                          selectedFormat={selectedFormat}
+                          setSelectedFormat={setSelectedFormat}
+                        />
+
+                        <Button
+                          onClick={handleDownload}
+                          className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors"
+                          disabled={!selectedPlatform || !selectedFormat}
+                        >
+                          Lataa kuva
+                        </Button>
                       </div>
                     )}
                   </CardContent>
@@ -389,9 +420,11 @@ export default function ImageUploader() {
           )}
         </AnimatePresence>
         <Suspense fallback={<p>Viimeisiä kuvia ladataan...</p>}>
-          <div className="max-w-4xl mx-auto space-y-8">
-            <RecentImages apiUrl={apiUrl} refreshTrigger={refreshTrigger} />
-          </div>
+          {!loading && !adTextLoading && showRecentImages && (
+            <div className="max-w-4xl mx-auto space-y-8">
+              <RecentImages apiUrl={apiUrl} refreshTrigger={refreshTrigger} />
+            </div>
+          )}
         </Suspense>
       </div>
     </motion.div>

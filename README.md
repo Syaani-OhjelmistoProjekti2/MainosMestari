@@ -135,10 +135,12 @@ const response = await axios.post(
 ### Nykyinen toteutus (Stability.ai)
 
 Sovellus käyttää kahta Stability.ai:n API-endpointia:
+
 - **Taustan poisto**: 2 credittiä/generaatio (`/v2beta/stable-image/edit/remove-background`)
 - **Taustan vaihto ja valaistuksen säätö**: 8 credittiä/generaatio (`/v2beta/stable-image/edit/replace-background-and-relight`)
 
 Stability.ai:n hinnoittelu:
+
 - 1000 credittiä maksaa noin 10 dollaria
 - Taustan poisto: ~0.02 dollaria/kuva
 - Taustan vaihto ja valaistus: ~0.08 dollaria/kuva
@@ -148,6 +150,7 @@ Stability.ai:n hinnoittelu:
 Kustannusten optimoimiseksi voitaisiin harkita seuraavia vaihtoehtoja:
 
 1. **Replicate.com**
+
    - Tarjoaa joitakin Stability AI:n malleja edullisemmin
    - Inpainting-malli maksaa noin $0.0057/generaatio
    - Saatavilla osoitteessa: replicate.com/stability-ai/stable-diffusion-inpainting
@@ -158,6 +161,7 @@ Kustannusten optimoimiseksi voitaisiin harkita seuraavia vaihtoehtoja:
    - **Mallin ajaminen lokaalisti**: Mahdollisuus ajaa Stable Diffusion -malleja omalla palvelimella Dockerin avulla
 
 Tulevaisuudessa voitaisiin harkita hybridimallia:
+
 - Käyttää ilmaista rembg:tä taustan poistoon
 - Hyödyntää Replicaten edullisempia hintoja kuvan generointiin
 - Tarjota mahdollisuus ajaa malleja lokaalisti resurssien salliessa

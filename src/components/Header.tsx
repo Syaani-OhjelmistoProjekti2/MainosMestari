@@ -11,7 +11,7 @@ function Header() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-blue-50 dark:text-white border-black dark:border-white tracking-tight"
         >
-          Mainosmestari
+          MainosMestari
         </motion.h1>
 
         {/* <motion.div
