@@ -5,7 +5,7 @@ import { useRecentImages } from "@/hooks/useRecentImages";
 import { CircularEconomyOption } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CopyIcon, ImageIcon, Loader2, XIcon } from "lucide-react";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { AdTextOptions } from "./AdTextOptions";
 import { AnimatedStep } from "./AnimatedStep";
 import { CheckmarkIcon } from "./icons";
@@ -86,10 +86,6 @@ export default function ImageUploader() {
     handleRemoveImage();
     setCurrentStep("input");
   };
-
-  useEffect(() => {
-    console.log("selected", selectedOptions);
-  }, [selectedOptions]);
 
   const { addRecentImage } = useRecentImages({ apiUrl });
 
