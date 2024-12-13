@@ -144,17 +144,17 @@ export default function ImageUploader() {
     }
   };
 
-  const handleTestProcess = async () => {
-    try {
-      setCurrentStep("loading");
-      await testImageDownload(images[0].file);
-      setAdText(DEMO_AD_TEXT);
-      setCurrentStep("output");
-    } catch (error) {
-      console.error("Error:", error);
-      setCurrentStep("input");
-    }
-  };
+  // const handleTestProcess = async () => {
+  //   try {
+  //     setCurrentStep("loading");
+  //     await testImageDownload(images[0].file);
+  //     setAdText(DEMO_AD_TEXT);
+  //     setCurrentStep("output");
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     setCurrentStep("input");
+  //   }
+  // };
 
   return (
     <motion.div
@@ -164,7 +164,7 @@ export default function ImageUploader() {
       className="py-12 px-4 w-full"
     >
       {/* Test Controls */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* <div className="fixed top-4 right-4 z-50">
         <Card className="w-64">
           <CardHeader className="py-3">
             <CardTitle className="text-sm">Testaustoiminnot</CardTitle>
@@ -195,7 +195,7 @@ export default function ImageUploader() {
             )}
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto space-y-8">
