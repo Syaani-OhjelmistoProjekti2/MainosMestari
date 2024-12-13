@@ -5,7 +5,7 @@ import { useRecentImages } from "@/hooks/useRecentImages";
 import { CircularEconomyOption } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CopyIcon, ImageIcon, Loader2, XIcon } from "lucide-react";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { AdTextOptions } from "./AdTextOptions";
 import { AnimatedStep } from "./AnimatedStep";
 import { CheckmarkIcon } from "./icons";
@@ -87,6 +87,10 @@ export default function ImageUploader() {
     setCurrentStep("input");
   };
 
+  useEffect(() => {
+    console.log("selected", selectedOptions);
+  }, [selectedOptions]);
+
   const { addRecentImage } = useRecentImages({ apiUrl });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,7 +108,7 @@ export default function ImageUploader() {
         event,
         images[0].file,
         description,
-        creativity
+        creativity,
       );
 
       if ("success" in result && result.success && result.imageId) {
@@ -129,7 +133,7 @@ export default function ImageUploader() {
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format
+        selectedFormat as Format,
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -260,13 +264,14 @@ export default function ImageUploader() {
                         isAdText={isAdText}
                         onCheckedChange={setIsAdText}
                         selectedOptions={selectedOptions}
-                        onOptionChange={(e) => {
-                          const { value, checked } = e.target;
-                          setSelectedOptions((prev) =>
-                            checked
-                              ? [...prev, value as CircularEconomyOption]
-                              : prev.filter((option) => option !== value)
-                          );
+                        onOptionChange={(option, isSelected) => {
+                          if (isSelected) {
+                            setSelectedOptions((prev) => [...prev, option]);
+                          } else {
+                            setSelectedOptions((prev) =>
+                              prev.filter((item) => item !== option),
+                            );
+                          }
                         }}
                       />
                       <div className="flex items-center space-x-2">
