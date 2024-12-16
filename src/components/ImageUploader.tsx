@@ -110,7 +110,7 @@ export default function ImageUploader() {
         event,
         images[0].file,
         description,
-        creativity
+        creativity,
       );
 
       if ("success" in result && result.success && result.imageId) {
@@ -126,11 +126,15 @@ export default function ImageUploader() {
         setShowRecentImages(true);
       }
     } catch (error) {
+      // Näytetään backendin lähettämä virheilmoitus
       if (error instanceof Error) {
-        alert("Tapahtui virhe: " + error.message);
-        setCurrentStep("input");
-        setShowRecentImages(true);
+        alert(error.message);
+        console.error("Detailed error:", error); // Säilytetään debuggausta varten
+      } else {
+        alert("Tuntematon virhe tapahtui");
       }
+      setCurrentStep("input");
+      setShowRecentImages(true);
     }
   };
 
@@ -139,7 +143,7 @@ export default function ImageUploader() {
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format
+        selectedFormat as Format,
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -277,7 +281,7 @@ export default function ImageUploader() {
                             setSelectedOptions((prev) => [...prev, option]);
                           } else {
                             setSelectedOptions((prev) =>
-                              prev.filter((item) => item !== option)
+                              prev.filter((item) => item !== option),
                             );
                           }
                         }}

@@ -211,7 +211,7 @@ const SocialMediaSelector = ({
                   <span>{name}</span>
                 </div>
               </SelectItem>
-            )
+            ),
           )}
         </SelectContent>
       </Select>

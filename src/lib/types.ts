@@ -28,4 +28,3 @@ export const circularEconomySelects = [
     label: "Säilyttää arvon (kierrätettävyys)",
   },
 ] as const;
-
