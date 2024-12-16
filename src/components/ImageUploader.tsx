@@ -1,5 +1,8 @@
 import { useAdText } from "@/hooks/useAdText";
-import { useImageProcessing } from "@/hooks/useImageProcessing";
+import {
+  LOADING_MESSAGES,
+  useImageProcessing,
+} from "@/hooks/useImageProcessing";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useRecentImages } from "@/hooks/useRecentImages";
 import { CircularEconomyOption } from "@/lib/types";
@@ -50,6 +53,7 @@ export default function ImageUploader() {
   const [selectedFormat, setSelectedFormat] = useState<Format | "">("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showRecentImages, setShowRecentImages] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
   const {
     images,
     handleFileChange,
@@ -63,8 +67,8 @@ export default function ImageUploader() {
     imageUrl,
     loading,
     loadingStatus,
+    setLoading,
     setLoadingStatus,
-    imageDescription,
     handleSubmit,
     downloadImage,
     testImageDownload,
@@ -102,12 +106,11 @@ export default function ImageUploader() {
 
     try {
       setCurrentStep("loading");
-      setLoadingStatus("Generoidaan mainoskuvaa...");
       const result = await handleSubmit(
         event,
         images[0].file,
         description,
-        creativity,
+        creativity
       );
 
       if ("success" in result && result.success && result.imageId) {
@@ -117,7 +120,7 @@ export default function ImageUploader() {
         setCurrentStep("output");
 
         if (isAdText && result.newDescription) {
-          setLoadingStatus("Generoidaan mainostekstiä...");
+          setLoadingStatus(LOADING_MESSAGES.AD_TEXT);
           await generateAdText(result.newDescription, selectedOptions);
         }
         setShowRecentImages(true);
@@ -132,39 +135,42 @@ export default function ImageUploader() {
   };
 
   const handleDownload = async () => {
+    setIsDownloading(true);
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format,
+        selectedFormat as Format
       );
     } catch (error) {
       if (error instanceof Error) {
         alert("Error downloading image: " + error.message);
       }
+    } finally {
+      setIsDownloading(false);
     }
   };
 
-  // const handleTestProcess = async () => {
-  //   try {
-  //     setCurrentStep("loading");
-  //     await testImageDownload(images[0].file);
-  //     setAdText(DEMO_AD_TEXT);
-  //     setCurrentStep("output");
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     setCurrentStep("input");
-  //   }
-  // };
+  const handleTestProcess = async () => {
+    try {
+      setCurrentStep("loading");
+      await testImageDownload(images[0].file);
+      setAdText(DEMO_AD_TEXT);
+      setCurrentStep("output");
+    } catch (error) {
+      console.error("Error:", error);
+      setCurrentStep("input");
+    }
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }}
-      className="py-12 px-4 w-full"
+      className="py-12 px-4 w-full "
     >
       {/* Test Controls */}
-      {/* <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <Card className="w-64">
           <CardHeader className="py-3">
             <CardTitle className="text-sm">Testaustoiminnot</CardTitle>
@@ -174,7 +180,7 @@ export default function ImageUploader() {
               onClick={() =>
                 generateAdText(
                   "Hyvä kuntoinen tuoli valkoisella kankaalla",
-                  selectedOptions,
+                  selectedOptions
                 )
               }
               variant="outline"
@@ -195,7 +201,7 @@ export default function ImageUploader() {
             )}
           </CardContent>
         </Card>
-      </div> */}
+      </div>
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto space-y-8">
@@ -271,7 +277,7 @@ export default function ImageUploader() {
                             setSelectedOptions((prev) => [...prev, option]);
                           } else {
                             setSelectedOptions((prev) =>
-                              prev.filter((item) => item !== option),
+                              prev.filter((item) => item !== option)
                             );
                           }
                         }}
@@ -387,9 +393,13 @@ export default function ImageUploader() {
                               <Button
                                 onClick={handleDownload}
                                 className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors"
-                                disabled={!selectedPlatform || !selectedFormat}
+                                disabled={
+                                  isDownloading ||
+                                  (selectedPlatform !== "original" &&
+                                    (!selectedPlatform || !selectedFormat))
+                                }
                               >
-                                Lataa kuva
+                                {isDownloading ? "Ladataan..." : "Lataa kuva"}
                               </Button>
                             </motion.div>
                           </>
@@ -407,9 +417,13 @@ export default function ImageUploader() {
                         <Button
                           onClick={handleDownload}
                           className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors"
-                          disabled={!selectedPlatform || !selectedFormat}
+                          disabled={
+                            isDownloading ||
+                            (selectedPlatform !== "original" &&
+                              (!selectedPlatform || !selectedFormat))
+                          }
                         >
-                          Lataa kuva
+                          {isDownloading ? "Ladataan..." : "Lataa kuva"}
                         </Button>
                       </div>
                     )}

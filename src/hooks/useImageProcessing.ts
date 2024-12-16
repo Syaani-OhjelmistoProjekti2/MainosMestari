@@ -17,6 +17,12 @@ interface ImageApiResponse {
   description: string;
 }
 
+export const LOADING_MESSAGES = {
+  UPLOAD: "Lähetetään kuvaa...",
+  GENERATION: "Generoidaan kuvaa...",
+  AD_TEXT: "Generoidaan mainostekstiä...",
+} as const;
+
 export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -27,12 +33,12 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
     event: React.FormEvent<HTMLFormElement>,
     file: File,
     description: string,
-    creativity: boolean,
+    creativity: boolean
   ): Promise<SuccessResult> => {
     event.preventDefault();
     setImageUrl("");
     setLoading(true);
-    setLoadingStatus("Lähetetään kuvaa...");
+    setLoadingStatus(LOADING_MESSAGES.UPLOAD);
 
     const formData = new FormData();
     formData.append("img", file);
@@ -59,7 +65,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
       }
 
       let inProgress = true;
-      setLoadingStatus("Generoidaan kuvaa...");
+      setLoadingStatus(LOADING_MESSAGES.GENERATION);
 
       while (inProgress) {
         const formDataImage = new FormData();
@@ -102,11 +108,11 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
 
   const downloadImage = async (
     selectedPlatform: Platform,
-    selectedFormat: Format,
+    selectedFormat: Format
   ) => {
     try {
-      if (!imageUrl || !selectedPlatform || !selectedFormat) {
-        alert("Please select a platform and format before downloading.");
+      if (!imageUrl) {
+        alert("No image to download");
         return;
       }
 
@@ -115,6 +121,11 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
         link.href = imageUrl;
         link.download = "original_image.png";
         link.click();
+        return;
+      }
+
+      if (!selectedFormat) {
+        alert("Valitse kuva formaatti enne latausta.");
         return;
       }
 
