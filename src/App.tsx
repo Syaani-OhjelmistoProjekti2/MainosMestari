@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import ImageUploader from "./components/ImageUploader";
+import LoadingSpinner from "./components/loaders";
 
 function App() {
   return (
@@ -10,10 +12,12 @@ function App() {
         style={{ backgroundImage: 'url("/beautiful-blue-002.jpeg")' }}
       ></div>
       <div className="absolute inset-0 w-full min-h-screen overflow-auto">
-        <main className="relative z-10">
-          <Header />
-          <ImageUploader />
-        </main>
+        <Header />
+        <Suspense fallback={<LoadingSpinner />}>
+          <main className="relative z-10">
+            <ImageUploader />
+          </main>
+        </Suspense>
       </div>
     </div>
   );
