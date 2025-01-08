@@ -1,3 +1,4 @@
+import { useStep } from "@/contexts/StepContext";
 import { useAdText } from "@/hooks/useAdText";
 import {
   LOADING_MESSAGES,
@@ -24,8 +25,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
-type Step = "input" | "loading" | "output";
-
 const DEMO_AD_TEXT = `Upea moderni huonekalu nyt myynnissä!
 Etsitkö tyylikästä ja ajatonta lisää kotiisi? Tämä huippudesign-huonekalu on juuri sitä mitä tarvitset. 
 
@@ -43,9 +42,9 @@ Ota yhteyttä ja tee elämäsi design-löytö! 📞`;
 export default function ImageUploader() {
   const apiUrl = (import.meta.env.VITE_BACKEND_URL as string) || "";
   const [creativity, setCreativity] = useState(false);
-  const [currentStep, setCurrentStep] = useState<Step>("input");
+  const { currentStep, hasShownGuide, setCurrentStep } = useStep();
   const [description, setDescription] = useState("");
-  const [isAdText, setIsAdText] = useState(false);
+  const [isAdText, setIsAdText] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState<
     CircularEconomyOption[]
   >([]);
@@ -170,8 +169,9 @@ export default function ImageUploader() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }}
-      className="py-12 px-4 w-full "
+      transition={{ duration: hasShownGuide ? 0.8 : 0, ease: "easeInOut" }}
+      className="w-full"
+      viewport={{ once: true }}
     >
       {/* Test Controls */}
       {/* <div className="fixed top-4 right-4 z-50">
@@ -211,109 +211,107 @@ export default function ImageUploader() {
       <div className="max-w-6xl mx-auto space-y-8">
         <AnimatePresence mode="wait">
           {currentStep === "input" ? (
-            <AnimatedStep stepKey="input" key="input-step">
-              <motion.div
-                key="input"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card className="shadow-lg max-w-2xl mx-auto">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <ImageIcon className="w-5 h-5" />
-                      Kuvan luonti
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={onSubmit} className="space-y-6">
-                      <div>
-                        <label
-                          htmlFor="description"
-                          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                          Kuvaile haluamasi mainoskuva
-                        </label>
-                        <textarea
-                          id="description"
-                          rows={4}
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                          placeholder="Kuvaile millaisen mainoskuvan haluat tekoälyn luovan..."
-                          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-3 text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-shadow"
-                        />
-                      </div>
-
-                      <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4">
-                        <ImageUploadArea
-                          inputKey={inputKey}
-                          onFileChange={handleFileChange}
-                          onDrop={handleDrop}
-                          onDragOver={handleDragOver}
-                        />
-
-                        {images.length > 0 && (
-                          <div className="relative mt-4 w-48 h-48 mx-auto">
-                            <img
-                              src={images[0].preview}
-                              alt="Uploaded image"
-                              className="rounded-lg shadow-md w-full h-full object-cover"
-                            />
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-2 right-2 bg-white/80 hover:bg-white/90 dark:bg-black/80 dark:hover:bg-black/90 rounded-full"
-                              onClick={handleRemoveImage}
-                            >
-                              <XIcon className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-
-                      <AdTextOptions
-                        isAdText={isAdText}
-                        onCheckedChange={setIsAdText}
-                        selectedOptions={selectedOptions}
-                        onOptionChange={(option, isSelected) => {
-                          if (isSelected) {
-                            setSelectedOptions((prev) => [...prev, option]);
-                          } else {
-                            setSelectedOptions((prev) =>
-                              prev.filter((item) => item !== option),
-                            );
-                          }
-                        }}
-                      />
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="creativity"
-                          checked={creativity}
-                          onCheckedChange={setCreativity}
-                        />
-                        <Label>Luova moodi (vapaampi tulkinta kuvasta)</Label>
-                      </div>
-
-                      <TooltipButton
-                        type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-                        disabled={!images.length || !description}
-                        tooltipMessage={
-                          !images.length && !description
-                            ? "Lisää kuva ja kuvaus jatkaaksesi"
-                            : !images.length
-                              ? "Lisää kuva jatkaaksesi"
-                              : "Lisää kuvaus jatkaaksesi"
-                        }
+            <motion.div
+              key="input"
+              initial={{ opacity: 0, x: 0 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="shadow-lg max-w-2xl mx-auto">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ImageIcon className="w-5 h-5" />
+                    Kuvan luonti
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={onSubmit} className="space-y-6">
+                    <div>
+                      <label
+                        htmlFor="description"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
-                        Luo mainoskuva
-                      </TooltipButton>
-                    </form>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </AnimatedStep>
+                        Kuvaile haluamasi mainoskuva
+                      </label>
+                      <textarea
+                        id="description"
+                        rows={4}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Kuvaile millaisen mainoskuvan haluat tekoälyn luovan..."
+                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-3 text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-shadow"
+                      />
+                    </div>
+
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                      <ImageUploadArea
+                        inputKey={inputKey}
+                        onFileChange={handleFileChange}
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                      />
+
+                      {images.length > 0 && (
+                        <div className="relative mt-4 w-48 h-48 mx-auto">
+                          <img
+                            src={images[0].preview}
+                            alt="Uploaded image"
+                            className="rounded-lg shadow-md w-full h-full object-cover"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-2 right-2 bg-white/80 hover:bg-white/90 dark:bg-black/80 dark:hover:bg-black/90 rounded-full"
+                            onClick={handleRemoveImage}
+                          >
+                            <XIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+
+                    <AdTextOptions
+                      isAdText={isAdText}
+                      onCheckedChange={setIsAdText}
+                      selectedOptions={selectedOptions}
+                      onOptionChange={(option, isSelected) => {
+                        if (isSelected) {
+                          setSelectedOptions((prev) => [...prev, option]);
+                        } else {
+                          setSelectedOptions((prev) =>
+                            prev.filter((item) => item !== option),
+                          );
+                        }
+                      }}
+                    />
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="creativity"
+                        checked={creativity}
+                        onCheckedChange={setCreativity}
+                      />
+                      <Label>Luova moodi (vapaampi tulkinta kuvasta)</Label>
+                    </div>
+
+                    <TooltipButton
+                      type="submit"
+                      className="bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                      disabled={!images.length || !description}
+                      tooltipMessage={
+                        !images.length && !description
+                          ? "Lisää kuva ja kuvaus jatkaaksesi"
+                          : !images.length
+                            ? "Lisää kuva jatkaaksesi"
+                            : "Lisää kuvaus jatkaaksesi"
+                      }
+                    >
+                      Luo mainoskuva
+                    </TooltipButton>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
           ) : currentStep === "loading" ? (
             <AnimatedStep stepKey="loading" key="loading-step">
               <Card className="shadow-lg max-w-2xl mx-auto">
