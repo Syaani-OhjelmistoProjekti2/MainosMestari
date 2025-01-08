@@ -173,3 +173,7 @@ Tulevaisuudessa voitaisiin harkita hybridimallia:
 Projektitiimi: [Mikko Särkiniemi](https://github.com/Mikkosar), [Pinja Tirkkonen](https://github.com/pinzati), [Chak-Fung Tsang](https://github.com/Chaakkii), [Artur Golubev](https://github.com/goluart), [Joni Tirkkonen](https://github.com/jonitirk).
 
 GitHub-repositorio: [https://github.com/Syaani-OhjelmistoProjekti2/MainosMestari-backend](https://github.com/Syaani-OhjelmistoProjekti2/MainosMestari-backend)
+
+## Lisenssi
+
+License - katso [LICENSE](LICENSE) tiedosto lisätietoja varten.
