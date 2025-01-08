@@ -33,7 +33,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
     event: React.FormEvent<HTMLFormElement>,
     file: File,
     description: string,
-    creativity: boolean,
+    creativity: boolean
   ): Promise<SuccessResult> => {
     event.preventDefault();
     setImageUrl("");
@@ -54,7 +54,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.details || errorData.error || "Unknown error occurred",
+          errorData.details || errorData.error || "Unknown error occurred"
         );
       }
 
@@ -86,7 +86,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
         const imageData = await imageResponse.json();
 
         if (!imageData.image || imageData.image === 202) {
-          await new Promise((resolve) => setTimeout(resolve, 5000));
+          await new Promise((resolve) => setTimeout(resolve, 3000));
           continue;
         }
 
@@ -111,7 +111,7 @@ export const useImageProcessing = ({ apiUrl }: UseImageProcessingProps) => {
 
   const downloadImage = async (
     selectedPlatform: Platform,
-    selectedFormat: Format,
+    selectedFormat: Format
   ) => {
     try {
       if (!imageUrl) {
