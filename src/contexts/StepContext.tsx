@@ -1,4 +1,11 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  MutableRefObject,
+  ReactNode,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 
 type Step = "input" | "loading" | "output";
 
@@ -7,6 +14,8 @@ interface StepContextType {
   setCurrentStep: (step: Step) => void;
   hasShownGuide: boolean;
   setHasShownGuide: (shown: boolean) => void;
+  headerRef: MutableRefObject<HTMLDivElement | null>;
+  scrollToHeader: () => void;
 }
 
 const StepContext = createContext<StepContextType | undefined>(undefined);
@@ -14,6 +23,17 @@ const StepContext = createContext<StepContextType | undefined>(undefined);
 export function StepProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState<Step>("input");
   const [hasShownGuide, setHasShownGuide] = useState(false);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToHeader = () => {
+    setTimeout(() => {
+      headerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
+  };
+
   return (
     <StepContext.Provider
       value={{
@@ -21,6 +41,8 @@ export function StepProvider({ children }: { children: ReactNode }) {
         setCurrentStep,
         hasShownGuide,
         setHasShownGuide,
+        headerRef,
+        scrollToHeader,
       }}
     >
       {children}

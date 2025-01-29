@@ -5,10 +5,11 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
 
 export const FurnitureGuide = ({ onComplete }: { onComplete: () => void }) => {
-  const { hasShownGuide, setHasShownGuide } = useStep();
+  const { hasShownGuide, setHasShownGuide, scrollToHeader } = useStep();
 
   const handleComplete = () => {
     setHasShownGuide(true);
+    scrollToHeader();
     onComplete();
   };
 
@@ -39,39 +40,36 @@ export const FurnitureGuide = ({ onComplete }: { onComplete: () => void }) => {
               </div>
             </div>
 
-            <div className="p-4 space-y-4">
-              <div className="flex items-start gap-3 pb-3 border-b border-blue-200">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="md:p-4 p-2 md:space-y-4 space-y-2">
+              <div className="flex items-start md:gap-3 gap-2 md:pb-3 pb-2 border-b border-blue-200">
+                <div className="md:w-6 md:h-6 w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-blue-600 font-medium">1</span>
                 </div>
-                <p className="text-sm text-blue-900">
+                <p className="text-sm text-blue-900 md:leading-normal leading-tight">
                   Parhaan tuloksen saamiseksi muista jättää riittävästi tilaa
                   huonekalun ympärille kuvattaessa.
                 </p>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="flex items-start md:gap-3 gap-2">
+                <div className="md:w-6 md:h-6 w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-blue-600 font-medium">2</span>
                 </div>
-                <p className="text-sm text-blue-900">
-                  Kuvaa huonekalu niin, että se on selkeästi erotettavissa ja
-                  kuvassa näkyy vain yksi huonekalu kerrallaan. Varmista, ettei
-                  kuvassa ole muita huonekaluja, sillä ne voivat vaikuttaa
-                  tunnistuksen tarkkuuteen.
+                <p className="text-sm text-blue-900 md:leading-normal leading-tight">
+                  Kuvaa kaluste niin, että se erottuu selkeästi taustasta ja sen
+                  ympärillä on tyhjää tilaa. Vältä muiden kalusteiden näkymistä
+                  kuvassa. Halutessasi voit poistaa taustan sopivalla
+                  ohjelmalla.
                 </p>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col items-center bg-gray-50 rounded-xl p-4">
-            <div className="mb-2 text-sm font-medium text-gray-600">
-              Esimerkkikuva
-            </div>
             <img
               src="/flux-pro-1.1-exaxmple.png"
               alt="Esimerkki hyvästä kuvauskulmasta"
-              className="rounded-lg w-full md:max-w-[350px] md:max-h-[350px] max-w-[300px] max-h-[260px] object-contain bg-white shadow-sm"
+              className="rounded-lg w-full md:max-w-[250px] md:max-h-[250px] max-w-[250px] max-h-[260px] object-contain bg-white shadow-sm"
             />
           </div>
         </CardContent>

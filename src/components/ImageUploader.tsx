@@ -109,7 +109,7 @@ export default function ImageUploader() {
         event,
         images[0].file,
         description,
-        creativity,
+        creativity
       );
 
       if ("success" in result && result.success && result.imageId) {
@@ -142,7 +142,7 @@ export default function ImageUploader() {
     try {
       await downloadImage(
         selectedPlatform as Platform,
-        selectedFormat as Format,
+        selectedFormat as Format
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -280,7 +280,7 @@ export default function ImageUploader() {
                           setSelectedOptions((prev) => [...prev, option]);
                         } else {
                           setSelectedOptions((prev) =>
-                            prev.filter((item) => item !== option),
+                            prev.filter((item) => item !== option)
                           );
                         }
                       }}

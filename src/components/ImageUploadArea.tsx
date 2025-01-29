@@ -22,9 +22,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
     >
       <div className="flex items-center justify-center space-x-2">
         <UploadIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-        <p className="text-zinc-500 dark:text-zinc-400">
-          Vedä ja pudota kuva tänne
-        </p>
+        <p className="text-zinc-500 dark:text-zinc-400">Pudota kuva tähän</p>
       </div>
       <div className="text-center mt-2">
         <input
@@ -45,7 +43,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
               document.getElementById("fileInput")?.click();
             }}
           >
-            Tai selaa tiedostoja
+            Selaa tiedostoja
           </Button>
         </label>
       </div>
